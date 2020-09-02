@@ -9,48 +9,52 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.NotEmpty;
+
+import org.hibernate.validator.constraints.Length;
 
 @Entity
-@Table(name="ELEF-BRANCH")
+@Table(name="ELEF_BRANCH")
 public class Branch {
+
+
+
 
 	@Id
 	@Column(name="BRANCHID")
 	private int branchId;
 	
-//	@NotEmpty(message="Name should not be empty")
-//	@Length(max=25)
+	@NotEmpty(message=" Branch Name should not be empty")
+	@Length(max=25)
 	@Column(name="BRANCHNAME")
 	private String branchName;
 	
+	@Length(max=10)
+	@NotEmpty(message="Name should not be empty")
 	@Column(name="CONTACTNUMBER")
 	private String contactNumber;
 	
 	@OneToOne
 	private Admin admin;
 	
-	
-	@OneToMany(mappedBy="branch")
+	@OneToMany(mappedBy="branch_order")
 	private List<Order> orders;
 	
-	
-	@ManyToMany(mappedBy="branch")
+	@ManyToMany(mappedBy="branch_item")
 	private List<Item> items;
 	
 	
 	@ManyToMany(mappedBy="branch")
-	private List<Category> categories;
-
+	private List<Category> category;
 	
 	public Branch() {
-		super();
-		// TODO Auto-generated constructor stub
+		
 	}
 
-	
-
-	public Branch(int branchId, String branchName, String contactNumber, Admin admin, List<Order> orders,
-			List<Item> items, List<Category> categories) {
+	public Branch(int branchId,
+			@NotEmpty(message = " Branch Name should not be empty") @Length(max = 25) String branchName,
+			@Length(max = 10) @NotEmpty(message = "Name should not be empty") String contactNumber, Admin admin,
+			List<Order> orders, List<Item> items, List<Category> category) {
 		super();
 		this.branchId = branchId;
 		this.branchName = branchName;
@@ -58,9 +62,8 @@ public class Branch {
 		this.admin = admin;
 		this.orders = orders;
 		this.items = items;
-		this.categories = categories;
+		this.category = category;
 	}
-
 
 	public int getBranchId() {
 		return branchId;
@@ -86,28 +89,13 @@ public class Branch {
 		this.contactNumber = contactNumber;
 	}
 
+	
 	public Admin getAdmin() {
 		return admin;
 	}
 
 	public void setAdmin(Admin admin) {
 		this.admin = admin;
-	}
-
-	public List<Item> getItems() {
-		return items;
-	}
-
-	public void setItems(List<Item> items) {
-		this.items = items;
-	}
-
-	public List<Category> getCategories() {
-		return categories;
-	}
-
-	public void setCategories(List<Category> categories) {
-		this.categories = categories;
 	}
 
 	public List<Order> getOrders() {
@@ -118,13 +106,27 @@ public class Branch {
 		this.orders = orders;
 	}
 
+	public List<Item> getItems() {
+		return items;
+	}
 
+	public void setItems(List<Item> items) {
+		this.items = items;
+	}
+
+	public List<Category> getCategory() {
+		return category;
+	}
+
+	public void setCategory(List<Category> category) {
+		this.category = category;
+	}
 
 	@Override
 	public String toString() {
 		return "Branch [branchId=" + branchId + ", branchName=" + branchName + ", contactNumber=" + contactNumber
-				+ ", admin=" + admin + ", orders=" + orders + ", items=" + items + ", categories=" + categories + "]";
+				+ ", admin=" + admin + ", orders=" + orders + ", items=" + items + ", category=" + category + "]";
 	}
-
-			
+	
+   
 }

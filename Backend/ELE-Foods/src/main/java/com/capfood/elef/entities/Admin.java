@@ -1,40 +1,61 @@
 package com.capfood.elef.entities;
 
+
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.NotEmpty;
+
+import org.hibernate.validator.constraints.Length;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
-@Table(name="ELEF-ADMIN")
-public class Admin {
+@Table(name="ELEF_ADMIN")
+public class Admin  {
 	
+	
+	
+
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name="ADMINID")
     private int adminId;
 	
+	@NotEmpty(message="admin name cannot be empty")
+	@Length(max=30)
 	@Column(name="ADMINNAME")
 	private String adminName;
 	
-	@OneToOne
+	@NotEmpty(message="user name cannot be empty")
+	@Length(max=10)
+	@Column(name="USERNAME")
+	private String userName;
+	
+	@NotEmpty(message="password cannot be empty")
+	@Length(max=10)
+	@Column(name="PASSWORD")
+	private String password;
+	
+	@OneToOne(mappedBy="admin")
+	@JoinColumn(name="BRANCH")
 	private Branch branch;
-
-	
-	
 	
 	public Admin() {
-		super();
-		// TODO Auto-generated constructor stub
+		
 	}
 
-	public Admin(int adminId, String adminName, Branch branch) {
+	public Admin(int adminId, @NotEmpty(message = "admin name cannot be empty") @Length(max = 30) String adminName,
+			@NotEmpty(message = "user name cannot be empty") @Length(max = 10) String userName,
+			@NotEmpty(message = "password cannot be empty") @Length(max = 10) String password, Branch branch) {
 		super();
 		this.adminId = adminId;
 		this.adminName = adminName;
+		this.userName = userName;
+		this.password = password;
 		this.branch = branch;
 	}
 
@@ -54,6 +75,23 @@ public class Admin {
 		this.adminName = adminName;
 	}
 
+	public String getUserName() {
+		return userName;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	@JsonIgnore
 	public Branch getBranch() {
 		return branch;
 	}
@@ -62,9 +100,13 @@ public class Admin {
 		this.branch = branch;
 	}
 
+
 	@Override
 	public String toString() {
-		return "Admin [adminId=" + adminId + ", adminName=" + adminName + ", branch=" + branch + "]";
+		return "Admin [adminId=" + adminId + ", adminName=" + adminName + ", userName=" + userName + ", password="
+				+ password + ", branch=" + branch + "]";
 	}
-		
+	
+	
+	
 }

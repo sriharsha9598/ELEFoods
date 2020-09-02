@@ -1,46 +1,58 @@
 package com.capfood.elef.entities;
 
+
+
 import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.Min;
+
 
 @Entity
-@Table(name="ELEF-CARRYBOX")
-public class CarryBox {
+@Table(name="ELEF_CARRYBOX")
+public class CarryBox{
 	
+	
+
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name="BOXID")
 	private int boxId;
 	
+	
 	@Column(name="QUANTITY")
+	@Min(value=0)
 	private int quantity;
 	
-	@OneToMany(mappedBy="carryBox")
-	private List<Item> items;
 
-	@OneToOne
+	@Column(name="total_cost")
+	@Min(value=0)
+	private int total_cost;
+	
+	@OneToMany(mappedBy="carryBox")
+	private List<Item> itemlist;
+	
+	
+	@OneToOne(mappedBy="carryBox")
+	@JoinColumn(name="CUSTOMER")
 	private Customer customer;
 	
-	
 	public CarryBox() {
-		super();
-		// TODO Auto-generated constructor stub
+		
 	}
 
-	public CarryBox(int boxId, int quantity, List<Item> items, Customer customer) {
+	public CarryBox(int boxId, int quantity, int cost, List<Item> itemlist, Customer customer) {
 		super();
 		this.boxId = boxId;
 		this.quantity = quantity;
-		this.items = items;
+		this.itemlist = itemlist;
 		this.customer = customer;
+		this.total_cost = cost;
 	}
 
 	public int getBoxId() {
@@ -59,14 +71,15 @@ public class CarryBox {
 		this.quantity = quantity;
 	}
 
-	public List<Item> getItems() {
-		return items;
+	public List<Item> getItemlist() {
+		return itemlist;
 	}
 
-	public void setItems(List<Item> items) {
-		this.items = items;
+	public void setItemlist(List<Item> itemlist) {
+		this.itemlist = itemlist;
 	}
 
+	
 	public Customer getCustomer() {
 		return customer;
 	}
@@ -75,11 +88,21 @@ public class CarryBox {
 		this.customer = customer;
 	}
 
+	public int getTotal_cost() {
+		return total_cost;
+	}
+
+	public void setTotal_cost(int total_cost) {
+		this.total_cost = total_cost;
+	}
+
 	@Override
 	public String toString() {
-		return "CarryBox [boxId=" + boxId + ", quantity=" + quantity + ", items=" + items + ", customer=" + customer
-				+ "]";
+		return "CarryBox [boxId=" + boxId + ", quantity=" + quantity + ", total_cost=" + total_cost + ", itemlist="
+				+ itemlist + ", customer=" + customer + "]";
 	}
+
+	
 	
 	
 }

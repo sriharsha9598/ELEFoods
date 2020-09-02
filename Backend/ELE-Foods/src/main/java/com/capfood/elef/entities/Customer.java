@@ -1,5 +1,7 @@
 package com.capfood.elef.entities;
 
+
+
 import java.util.List;
 
 import javax.persistence.Column;
@@ -8,52 +10,62 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.NotEmpty;
+
+import org.hibernate.validator.constraints.Length;
 
 
 @Entity
-@Table(name="ELEF-CUSTOMER")
-public class Customer {
+@Table(name="ELEF_CUSTOMER")
+public class Customer  {
 
 	@Id
 	@Column(name="CUSTOMERID")
 	private int customerId;
 	
+	@NotEmpty(message="customer name should not be empty")
+	@Length(max=30)
 	@Column(name="CUSTOMERNAME")
 	private String customerName;
 	
+	@NotEmpty(message="emailId should not be empty")
+	@Length(max=30)
 	@Column(name="EMAILID")
 	private String emailId;
 	
+    @NotEmpty(message="mobile number should not be empty")
+    @Length(max=30)
 	@Column(name="MOBILENUMBER")
 	private String mobileNumber;
 	
+    @OneToMany(mappedBy="customer")
+    private List<Address> address;
+    
+    @OneToOne
+    private CarryBox carryBox;
+    
+
 	@OneToMany(mappedBy="customer")
 	private List<Order> myOrders;
 	
-	@OneToMany(mappedBy="customer")
-	private List<Address> addresses;
-
-	@OneToOne
-	private CarryBox carryBox;
-	
 	public Customer() {
-		super();
-		// TODO Auto-generated constructor stub
+		
 	}
 
-    
-	public Customer(int customerId, String customerName, String emailId, String mobileNumber, List<Order> myOrders,
-			List<Address> addresses, CarryBox carryBox) {
+	public Customer(int customerId,
+			@NotEmpty(message = "customer name should not be empty") @Length(max = 30) String customerName,
+			@NotEmpty(message = "emailId should not be empty") @Length(max = 30) String emailId,
+			@NotEmpty(message = "mobile number should not be empty") @Length(max = 30) String mobileNumber,
+			List<Address> address, CarryBox carryBox, List<Order> myOrders) {
 		super();
 		this.customerId = customerId;
 		this.customerName = customerName;
 		this.emailId = emailId;
 		this.mobileNumber = mobileNumber;
-		this.myOrders = myOrders;
-		this.addresses = addresses;
+		this.address = address;
 		this.carryBox = carryBox;
+		this.myOrders = myOrders;
 	}
-
 
 	public int getCustomerId() {
 		return customerId;
@@ -87,16 +99,21 @@ public class Customer {
 		this.mobileNumber = mobileNumber;
 	}
 
-	
+	public List<Address> getAddress() {
+		return address;
+	}
+
+	public void setAddress(List<Address> address) {
+		this.address = address;
+	}
+
 	public CarryBox getCarryBox() {
 		return carryBox;
 	}
 
-
 	public void setCarryBox(CarryBox carryBox) {
 		this.carryBox = carryBox;
 	}
-
 
 	public List<Order> getMyOrders() {
 		return myOrders;
@@ -106,21 +123,13 @@ public class Customer {
 		this.myOrders = myOrders;
 	}
 
-	public List<Address> getAddresses() {
-		return addresses;
-	}
-
-	public void setAddresses(List<Address> addresses) {
-		this.addresses = addresses;
-	}
-
-
 	@Override
 	public String toString() {
 		return "Customer [customerId=" + customerId + ", customerName=" + customerName + ", emailId=" + emailId
-				+ ", mobileNumber=" + mobileNumber + ", myOrders=" + myOrders + ", addresses=" + addresses
-				+ ", carryBox=" + carryBox + "]";
+				+ ", mobileNumber=" + mobileNumber + ", address=" + address + ", carryBox=" + carryBox + ", myOrders="
+				+ myOrders + "]";
 	}
-
-    
+	
+	
+	
 }

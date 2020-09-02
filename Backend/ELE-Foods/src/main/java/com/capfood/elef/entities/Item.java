@@ -1,68 +1,73 @@
 package com.capfood.elef.entities;
 
+
+
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotEmpty;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.validator.constraints.Length;
+
 
 @Entity
-@Table (name="ELEF-ITEM")
-public class Item {
+@Table (name="ELEF_ITEM")
+public class Item  {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name="ITEMID")
 	private int itemId;
 	
+	@Length(max=30)
+	@NotEmpty(message="iten name cannot be empty")
 	@Column(name="ITEMNAME")
 	private String itemName;
 	
+	@Length(max=50)
 	@Column(name="ITEMDESCRIPTION")
 	private String itemDescription;
 	
+	@Min(value=0)
 	@Column(name="ITEMPRICE")
 	private double itemPrice;
+	
 	
 	@Column(name="SPECIALITY")
 	private String speciality;
 	
+	
 	@Column(name="ACTIVE")
 	private boolean active;
 	
-	@ManyToMany(fetch= FetchType.EAGER)
-	@JoinColumn(name="branch")
-	private Branch branch;
-	
-	@ManyToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="order")
-	private Order order;
-	
+	@ManyToMany(fetch=FetchType.EAGER)
+	private List<Branch> branch_item;
+	   
 	@ManyToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="carryBox")
 	private CarryBox carryBox;
-	
-	@ManyToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="subCategory")
-	private SubCategory subCategory;
 
+	@ManyToOne(fetch=FetchType.EAGER)
+	@JoinColumn(name="ordered")
+	private Order ordered;
 	
-	
+	@Column(nullable=true)
+    private int subcatId;
 	
 	public Item() {
-		super();
-		// TODO Auto-generated constructor stub
+		
 	}
 
-	public Item(int itemId, String itemName, String itemDescription, double itemPrice, String speciality,
-			boolean active, Branch branch, Order order, CarryBox carryBox, SubCategory subCategory) {
+	public Item(int itemId, @Length(max = 30) @NotEmpty(message = "iten name cannot be empty") String itemName,
+			@Length(max = 50) String itemDescription, @Min(0) double itemPrice, String speciality, boolean active,
+			List<Branch> branch_item, CarryBox carryBox, Order ordered, int subcatId) {
 		super();
 		this.itemId = itemId;
 		this.itemName = itemName;
@@ -70,10 +75,10 @@ public class Item {
 		this.itemPrice = itemPrice;
 		this.speciality = speciality;
 		this.active = active;
-		this.branch = branch;
-		this.order = order;
+		this.branch_item = branch_item;
 		this.carryBox = carryBox;
-		this.subCategory = subCategory;
+		this.ordered = ordered;
+		this.subcatId = subcatId;
 	}
 
 	public int getItemId() {
@@ -108,7 +113,6 @@ public class Item {
 		this.itemPrice = itemPrice;
 	}
 
-	
 	public String getSpeciality() {
 		return speciality;
 	}
@@ -125,25 +129,14 @@ public class Item {
 		this.active = active;
 	}
 
-	@JsonIgnore
-	public Branch getBranch() {
-		return branch;
+	public List<Branch> getBranch_item() {
+		return branch_item;
 	}
 
-	public void setBranch(Branch branch) {
-		this.branch = branch;
+	public void setBranch_item(List<Branch> branch_item) {
+		this.branch_item = branch_item;
 	}
 
-	@JsonIgnore
-	public Order getOrder() {
-		return order;
-	}
-
-	public void setOrder(Order order) {
-		this.order = order;
-	}
-
-	@JsonIgnore
 	public CarryBox getCarryBox() {
 		return carryBox;
 	}
@@ -152,21 +145,28 @@ public class Item {
 		this.carryBox = carryBox;
 	}
 
-	@JsonIgnore
-	public SubCategory getSubCategory() {
-		return subCategory;
+	public Order getOrdered() {
+		return ordered;
 	}
 
+	public void setOrdered(Order ordered) {
+		this.ordered = ordered;
+	}
 
-	public void setSubCategory(SubCategory subCategory) {
-		this.subCategory = subCategory;
+	public int getSubcatId() {
+		return subcatId;
+	}
+
+	public void setSubcatId(int subcatId) {
+		this.subcatId = subcatId;
 	}
 
 	@Override
 	public String toString() {
 		return "Item [itemId=" + itemId + ", itemName=" + itemName + ", itemDescription=" + itemDescription
-				+ ", itemPrice=" + itemPrice + ", speciality=" + speciality + ", branch=" + branch + ", order=" + order
-				+ ", carryBox=" + carryBox + ", subCategory=" + subCategory + "]";
+				+ ", itemPrice=" + itemPrice + ", speciality=" + speciality + ", active=" + active + ", branch_item="
+				+ branch_item + ", carryBox=" + carryBox + ", ordered=" + ordered + ", subcatId=" + subcatId + "]";
 	}
 	
-}
+	
+	}

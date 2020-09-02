@@ -1,57 +1,79 @@
 package com.capfood.elef.entities;
 
+
+
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.NotEmpty;
+
+import org.hibernate.validator.constraints.Length;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+
+
 @Entity
-@Table(name="ELEF-ADDRESS")
+@Table(name="ELEF_ADDRESS")
 public class Address {
 
+
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name="addressId")
+	@Column(name="ADDRESSID")
 	private int addressId;
 	
+	
+	@Length(max=25)
 	@Column(name="NAME")
 	private String name;
 	
+	@NotEmpty(message="Address should not be empty")
+	@Length(max=30)
 	@Column(name="LINE1")
 	private String line1;
 	
+	@Length(max=30)
 	@Column(name="LINE2")
 	private String line2;
 	
+	@NotEmpty(message="City should not be empty")
+	@Length(max=20)
 	@Column(name="CITY")
 	private String city;
 	
+	
+	@Length(max=30)
 	@Column(name="LANDMARK")
 	private String landmark;
 	
+	@NotEmpty(message="Mobile Number should not be empty")
+	@Length(max=10)
 	@Column(name="MOBILENUMBER")
 	private String mobileNumber;
 	
-	@ManyToOne(fetch= FetchType.EAGER)
+	
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name="customer")
 	private Customer customer;
 	
 	
-	
 	public Address() {
-		super();
+		
 	}
 
 
-	public Address(int addressId, String name, String line1, String line2, String city, String landmark,
-			String mobileNumber, Customer customer) {
+	public Address(int addressId, @Length(max = 25) String name,
+			@NotEmpty(message = "Address should not be empty") @Length(max = 30) String line1,
+			@Length(max = 30) String line2,
+			@NotEmpty(message = "City should not be empty") @Length(max = 20) String city,
+			@Length(max = 30) String landmark,
+			@NotEmpty(message = "Mobile Number should not be empty") @Length(max = 10) String mobileNumber,
+			Customer customer) {
 		super();
 		this.addressId = addressId;
 		this.name = name;
@@ -133,7 +155,6 @@ public class Address {
 		this.mobileNumber = mobileNumber;
 	}
 
-
 	@JsonIgnore
 	public Customer getCustomer() {
 		return customer;
@@ -154,3 +175,6 @@ public class Address {
 	
 	
 }
+	
+
+	

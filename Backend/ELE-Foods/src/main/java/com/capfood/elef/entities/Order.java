@@ -1,5 +1,7 @@
 package com.capfood.elef.entities;
 
+
+
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
@@ -7,8 +9,6 @@ import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -17,12 +17,14 @@ import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+
+
 @Entity
-@Table(name="ELEF-ORDER")
+@Table(name="ELEF_ORDER")
 public class Order {
 	
+
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name="ID")
 	private int id;
 	
@@ -47,27 +49,24 @@ public class Order {
 	@Column(name="STATUSDESCRIPTION")
 	private String statusDescription;
 	
-	
-	@OneToMany(mappedBy="order")
-	private List<Item> items;
+	@ManyToOne(fetch=FetchType.EAGER)
+	@JoinColumn(name="BRANCH_ORDER")
+	private Branch branch_order;
 	
 	@ManyToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="customer")
 	private Customer customer;
-
-	@ManyToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="branch")
-	private Branch branch;
-
+ 
+	
+	@OneToMany(mappedBy="ordered")
+ 	private List<Item> items;
 	
 	public Order() {
-		super();
-		// TODO Auto-generated constructor stub
+		
 	}
 
-
 	public Order(int id, int orderId, LocalDate orderDate, LocalTime orderTime, int quantity, double orderPrice,
-			String orderStatus, String statusDescription, List<Item> items, Customer customer, Branch branch) {
+			String orderStatus, String statusDescription, Branch branch_order, Customer customer, List<Item> items) {
 		super();
 		this.id = id;
 		this.orderId = orderId;
@@ -77,128 +76,109 @@ public class Order {
 		this.orderPrice = orderPrice;
 		this.orderStatus = orderStatus;
 		this.statusDescription = statusDescription;
-		this.items = items;
+		this.branch_order = branch_order;
 		this.customer = customer;
-		this.branch = branch;
+		this.items = items;
 	}
-
 
 	public int getId() {
 		return id;
 	}
 
-
 	public void setId(int id) {
 		this.id = id;
 	}
-
 
 	public int getOrderId() {
 		return orderId;
 	}
 
-
 	public void setOrderId(int orderId) {
 		this.orderId = orderId;
 	}
-
 
 	public LocalDate getOrderDate() {
 		return orderDate;
 	}
 
-
 	public void setOrderDate(LocalDate orderDate) {
 		this.orderDate = orderDate;
 	}
-
 
 	public LocalTime getOrderTime() {
 		return orderTime;
 	}
 
-
 	public void setOrderTime(LocalTime orderTime) {
 		this.orderTime = orderTime;
 	}
-
 
 	public int getQuantity() {
 		return quantity;
 	}
 
-
 	public void setQuantity(int quantity) {
 		this.quantity = quantity;
 	}
-
 
 	public double getOrderPrice() {
 		return orderPrice;
 	}
 
-
 	public void setOrderPrice(double orderPrice) {
 		this.orderPrice = orderPrice;
 	}
-
 
 	public String getOrderStatus() {
 		return orderStatus;
 	}
 
-
 	public void setOrderStatus(String orderStatus) {
 		this.orderStatus = orderStatus;
 	}
-
 
 	public String getStatusDescription() {
 		return statusDescription;
 	}
 
-
 	public void setStatusDescription(String statusDescription) {
 		this.statusDescription = statusDescription;
 	}
 
-
-	public List<Item> getItems() {
-		return items;
+	public Branch getBranch_order() {
+		return branch_order;
 	}
 
-
-	public void setItems(List<Item> items) {
-		this.items = items;
+	public void setBranch_order(Branch branch_order) {
+		this.branch_order = branch_order;
 	}
 
-	@JsonIgnore
 	public Customer getCustomer() {
 		return customer;
 	}
-
 
 	public void setCustomer(Customer customer) {
 		this.customer = customer;
 	}
 
 	@JsonIgnore
-	public Branch getBranch() {
-		return branch;
+	public List<Item> getItems() {
+		return items;
 	}
 
-
-	public void setBranch(Branch branch) {
-		this.branch = branch;
+	public void setItems(List<Item> items) {
+		this.items = items;
 	}
-
 
 	@Override
 	public String toString() {
 		return "Order [id=" + id + ", orderId=" + orderId + ", orderDate=" + orderDate + ", orderTime=" + orderTime
 				+ ", quantity=" + quantity + ", orderPrice=" + orderPrice + ", orderStatus=" + orderStatus
-				+ ", statusDescription=" + statusDescription + ", items=" + items + ", customer=" + customer
-				+ ", branch=" + branch + "]";
+				+ ", statusDescription=" + statusDescription + ", branch_order=" + branch_order + ", customer="
+				+ customer + ", items=" + items + "]";
 	}
 
+
+	
+	
 }

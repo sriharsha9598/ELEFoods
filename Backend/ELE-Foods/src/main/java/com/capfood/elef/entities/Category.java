@@ -5,44 +5,43 @@ import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.NotEmpty;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+
 
 @Entity
-@Table(name="ELEF-CATEGORY")
-public class Category {
+@Table(name="ELEF_CATEGORY")
+public class Category 
+{
+
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name="CATEGORYID")
 	private int categoryId;
 	
+	@NotEmpty(message="category Name should not be empty")
 	@Column(name="CATEGORYNAME")
 	private String categoryName;
+	
 	
 	@OneToMany(mappedBy="category")
 	private List<SubCategory> subCategories;
 	
 	@ManyToMany(fetch=FetchType.EAGER)
 	@JoinColumn(name="branch")
-	private Branch branch;
-
-	
-	
+	private List<Branch> branch;
 	
 	public Category() {
-		super();
-		// TODO Auto-generated constructor stub
+		
 	}
 
-	public Category(int categoryId, String categoryName, List<SubCategory> subCategories, Branch branch) {
+	public Category(int categoryId, @NotEmpty(message = "category Name should not be empty") String categoryName,
+			List<SubCategory> subCategories, List<Branch> branch) {
 		super();
 		this.categoryId = categoryId;
 		this.categoryName = categoryName;
@@ -74,12 +73,11 @@ public class Category {
 		this.subCategories = subCategories;
 	}
 
-	@JsonIgnore
-	public Branch getBranch() {
+	public List<Branch> getBranch() {
 		return branch;
 	}
 
-	public void setBranch(Branch branch) {
+	public void setBranch(List<Branch> branch) {
 		this.branch = branch;
 	}
 
@@ -89,5 +87,5 @@ public class Category {
 				+ subCategories + ", branch=" + branch + "]";
 	}
 	
-		
+	
 }
