@@ -44,9 +44,9 @@ insert into elef_address values(3006,'Guntur','Road','D-No:2-15','chintalamma va
 insert into elef_address values(3007,'Guntur','Temple','D-No:2-16','jammichettu','9999999999','Pravallika',6006);
 
 
-insert into elef_category values(7001,'Food');
-insert into elef_category values(7002,'Drinks');
-insert into elef_category values(7003,'Chill');
+insert into elef_category values(7001,'Food',2001);
+insert into elef_category values(7002,'Drinks',2001);
+insert into elef_category values(7003,'Chill',2001);
 
 
 
@@ -57,7 +57,7 @@ insert into elef_order values(8004, TO_DATE('1989-12-06','YYYY-MM-DD'), 400,'Coo
 insert into elef_order values(8005, TO_DATE('1989-12-04','YYYY-MM-DD'), 500,'Delivered','',2, '',2001,6005);
 insert into elef_order values(8006, TO_DATE('1989-12-03','YYYY-MM-DD'), 600,'Rejected','',3, '',2001,6006);
 
-insert into elef_subcategory values(5001,'Biryanis',7001);
+ insert into elef_subcategory values(5001,'Biryanis',7001);
  insert into elef_subcategory values(5002,'Starters',7001);
  insert into elef_subcategory values(5003,'Kebabs',7001);
  insert into elef_subcategory values(5004,'Curries',7001);
@@ -66,48 +66,56 @@ insert into elef_subcategory values(5001,'Biryanis',7001);
  insert into elef_subcategory values(5006,'Desserts',7003);
 
 
-insert into elef_item values (2001,1,'','Chicken Biryani',210,'','','pic1','s',5001,'non-veg','','');
-insert into elef_item values (2002,0,'','Mutton Biryani',253,'','','pic2','ns',5001,'non-veg','','');
-insert into elef_item values (2003,1,'','Chicken Family Pack',552,'','','pic3','ns',5001,'non-veg','','');
-insert into elef_item values (2004,0,'','Mutton Family Pack',576,'','','pic4','ns',5001,'non-veg','','');
-insert into elef_item values (2005,1,'','Special Chicken Biryani',335,'','','pic5','ns',5001,'non-veg','','');
-insert into elef_item values (2006,1,'','Special Mutton Biryani',351,'','','pic6','ns',5001,'non-veg','','');
-insert into elef_item values (2007,1,'','Supreme Chicken Biryani',784,'','','pic7','ns',5001,'non-veg','','');
-insert into elef_item values (2008,0,'','Supreme Mutton Biryani',819,'','','pic8','s',5001,'non-veg','','');
-insert into elef_item values (2009,1,'','Egg Biryani',154,'','','pic9','s',5001,'non-veg','','');
-insert into elef_item values (2010,1,'','Veg-Biryani',154,'','','pic10','ns',5001,'veg','','');
-insert into elef_item values (2011,1,'','Veg-Family Pack',383,'','','ns','pic11',5001,'veg','','');
-insert into elef_item values (2012,1,'','Veg-Supreme Pack',574,'','','pic12','s',5001,'veg','','');
+insert into elef_item values (2001,1,'','Chicken Biryani',210,'','','pic1','s','non-veg',2001,'','',5001);
+insert into elef_item values (2002,0,'','Mutton Biryani',253,'','','pic2','ns','non-veg',2001,'','',5001);
+insert into elef_item values (2003,1,'','Chicken Family Pack',552,'','','pic3','ns','non-veg',2001,'','',5001);
+insert into elef_item values (2004,0,'','Mutton Family Pack',576,'','','pic4','ns','non-veg',2001,'','',5001);
+insert into elef_item values (2005,1,'','Special Chicken Biryani',335,'','','pic5','ns','non-veg',2001,'','',5001);
+insert into elef_item values (2006,1,'','Special Mutton Biryani',351,'','','pic6','ns','non-veg',2001,'','',5001);
+insert into elef_item values (2007,1,'','Supreme Chicken Biryani',784,'','','pic7','ns','non-veg',2001,'','',5001);
+insert into elef_item values (2008,0,'','Supreme Mutton Biryani',819,'','','pic8','s','non-veg',2001,'','',5001);
+insert into elef_item values (2009,1,'','Egg Biryani',154,'','','pic9','s','non-veg',2001,'','',5001);
+insert into elef_item values (2010,1,'','Veg-Biryani',154,'','','pic10','ns','veg',2001,'','',5001);
+insert into elef_item values (2011,1,'','Veg-Family Pack',383,'','','ns','pic11','veg',2001,'','',5001);
+insert into elef_item values (2012,1,'','Veg-Supreme Pack',574,'','','pic12','s','veg',2001,'','',5001);
 
-insert into elef_item values (2013,1,'','Chilli Chicken',264,'','','pic13','ns',5002,'non-veg','','');
-insert into elef_item values (2014,0,'','Chicken 65',264,'','','pic14','ns',5002,'non-veg','','');
-insert into elef_item values (2015,1,'','Pepper Chicken',264,'','','pic15','ns',5002,'non-veg','','');
-insert into elef_item values (2016,1,'','Paneer 65',196,'','','pic16','s',5002,'veg','','');
-insert into elef_item values (2017,1,'','Veg.Manchurian',819,'','','pic17','ns',5002,'veg','','');
+insert into elef_item values (2013,1,'','Chilli Chicken',264,'','','pic13','ns','non-veg',2001,'','',5002);
+insert into elef_item values (2014,0,'','Chicken 65',264,'','','pic14','ns','non-veg',2001,'','',5002);
+insert into elef_item values (2015,1,'','Pepper Chicken',264,'','','pic15','ns','non-veg',2001,'','',5002);
+insert into elef_item values (2016,1,'','Paneer 65',196,'','','pic16','s','veg',2001,'','',5002);
+insert into elef_item values (2017,1,'','Veg.Manchurian',819,'','','pic17','ns','veg',2001,'','',5002);
 
-insert into elef_item values (2018,1,'','Chicken Tikka Kabab',243,'','','pic18','ns',5003,'non-veg','','');
-insert into elef_item values (2019,0,'','Tanddori Chicken(Half)',243,'','','pic19','ns',5003,'non-veg','','');
-insert into elef_item values (2020,1,'','Tandoori Chicken(Full)',379,'','','pic20','ns',5003,'non-veg','','');
-insert into elef_item values (2021,1,'','Chicken Reshmi Kebab',243,'','','pic21','s',5003,'non-veg','','');
-insert into elef_item values (2022,1,'','Chicken-garlic kebab',243,'','','pic22','ns',5003,'non-veg','','');
+insert into elef_item values (2018,1,'','Chicken Tikka Kabab',243,'','','pic18','ns','non-veg',2001,'','',5003);
+insert into elef_item values (2019,0,'','Tanddori Chicken(Half)',243,'','','pic19','ns','non-veg',2001,'',''5003);
+insert into elef_item values (2020,1,'','Tandoori Chicken(Full)',379,'','','pic20','ns','non-veg',2001,'','',5003);
+insert into elef_item values (2021,1,'','Chicken Reshmi Kebab',243,'','','pic21','s','non-veg',2001,'','',5003);
+insert into elef_item values (2022,1,'','Chicken-garlic kebab',243,'','','pic22','ns','non-veg',2001,'','',5003);
 
-insert into elef_item values (2023,1,'','Butter Chicken Boneless',246,'','','pic23','ns',5004,'non-veg','','');
-insert into elef_item values (2024,1,'','Nizami handi',171,'','','pic24','s',5004,'veg','','');
+insert into elef_item values (2023,1,'','Butter Chicken Boneless',246,'','','pic23','ns','non-veg',2001,'','',5004);
+insert into elef_item values (2024,1,'','Nizami handi',171,'','','pic24','s','veg',2001,'','',5004);
 
-insert into elef_item values (2025,0,'','Tandoori Roti',264,'','','pic25','ns',5005,'veg','','');
-insert into elef_item values (2026,1,'','Rumali Roti',196,'','','pic26','s',5005,'veg','','');
+insert into elef_item values (2025,0,'','Tandoori Roti',264,'','','pic25','ns','veg',2001,'','',5005);
+insert into elef_item values (2026,1,'','Rumali Roti',196,'','','pic26','s','veg',2001,'','',5005);
 
 
-insert into elef_item values (2027,0,'','Qubani Ka Meetha 250gms',107,'','','pic27','ns',5006,'veg','','');
-insert into elef_item values (2028,1,'','Double Ka Meetha',73,'','','pic28','s',5006,'veg','','');
+insert into elef_item values (2027,0,'','Qubani Ka Meetha 250gms',107,'','','pic27','ns','veg',2001,'','',5006);
+insert into elef_item values (2028,1,'','Double Ka Meetha',73,'','','pic28','s','veg',2001,'','',5006);
 
-insert into elef_item values (2029,1,'','Diet Coke',150,'','','pic29','s',5007,'veg','','');
-insert into elef_item values (2030,1,'','Thums Up',50,'','','pic30','ns',5007,'veg','','');
-insert into elef_item values (2031,0,'','Mineral Water',45,'','','pic31','ns',5007,'veg','','');
-insert into elef_item values (2032,1,'','Maaza',45,'','','pic32','ns',5007,'veg','','');
-insert into elef_item values (2033,0,'','Sprite',45,'','','pic33','ns',5007,'veg','','');
-insert into elef_item values (2034,1,'','Coke Tin',60,'','','pic34','ns',5007,'veg','','');
-insert into elef_item values (2035,1,'','Fanta',45,'','','pic35','ns',5007,'veg','','');
+insert into elef_item values (2029,1,'','Diet Coke',150,'','','pic29','s','veg',2001,'','',5007);
+insert into elef_item values (2030,1,'','Thums Up',50,'','','pic30','ns','veg',2001,'','',5007);
+insert into elef_item values (2031,0,'','Mineral Water',45,'','','pic31','ns','veg',2001,'','',5007);
+insert into elef_item values (2032,1,'','Maaza',45,'','','pic32','ns','veg',2001,'','',5007);
+insert into elef_item values (2033,0,'','Sprite',45,'','','pic33','ns','veg',2001,'','',5007);
+insert into elef_item values (2034,1,'','Coke Tin',60,'','','pic34','ns','veg',2001,'','',5007);
+insert into elef_item values (2035,1,'','Fanta',45,'','','pic35','ns','veg',2001,'','',5007);
 commit;
+
+
+
+
+
+
+
+
 
 
