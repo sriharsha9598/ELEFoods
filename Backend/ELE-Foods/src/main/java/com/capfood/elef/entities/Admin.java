@@ -91,7 +91,6 @@ public class Admin  {
 		this.password = password;
 	}
 
-	@JsonIgnore
 	public Branch getBranch() {
 		return branch;
 	}

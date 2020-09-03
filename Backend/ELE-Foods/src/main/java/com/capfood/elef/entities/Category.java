@@ -8,6 +8,7 @@ import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
@@ -37,9 +38,9 @@ public class Category
 	@OneToMany(mappedBy="category")
 	private List<SubCategory> subCategories;
 	
-	@ManyToMany(fetch=FetchType.EAGER)
+	@ManyToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="branch")
-	private List<Branch> branch;
+	private Branch branch;
 	
 
 	
@@ -48,7 +49,7 @@ public class Category
 	}
 
 	public Category(int categoryId, @NotEmpty(message = "category Name should not be empty") String categoryName,
-			List<SubCategory> subCategories, List<Branch> branch) {
+			List<SubCategory> subCategories, Branch branch) {
 		super();
 		this.categoryId = categoryId;
 		this.categoryName = categoryName;
@@ -72,7 +73,6 @@ public class Category
 		this.categoryName = categoryName;
 	}
 
-	@JsonIgnore
 	public List<SubCategory> getSubCategories() {
 		return subCategories;
 	}
@@ -81,11 +81,12 @@ public class Category
 		this.subCategories = subCategories;
 	}
 
-	public List<Branch> getBranch() {
+	@JsonIgnore
+	public Branch getBranch() {
 		return branch;
 	}
 
-	public void setBranch(List<Branch> branch) {
+	public void setBranch(Branch branch) {
 		this.branch = branch;
 	}
 

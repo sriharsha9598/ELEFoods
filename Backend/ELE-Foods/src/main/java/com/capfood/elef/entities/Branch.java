@@ -20,8 +20,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 public class Branch {
 
 
-
-
 	@Id
 	@Column(name="BRANCHID")
 	private int branchId;
@@ -42,11 +40,11 @@ public class Branch {
 	@OneToMany(mappedBy="branch_order")
 	private List<Order> orders;
 	
-	@ManyToMany(mappedBy="branch_item")
+	@OneToMany(mappedBy="branch")
 	private List<Item> items;
 	
 	
-	@ManyToMany(mappedBy="branch")
+	@OneToMany(mappedBy="branch")
 	private List<Category> category;
 	
 	public Branch() {
@@ -92,8 +90,6 @@ public class Branch {
 	}
 
 	
-
-
 	public User getAdmin() {
 		return admin;
 	}
@@ -102,7 +98,6 @@ public class Branch {
 		this.admin = admin;
 	}
 
-	@JsonIgnore
 	public List<Order> getOrders() {
 		return orders;
 	}
