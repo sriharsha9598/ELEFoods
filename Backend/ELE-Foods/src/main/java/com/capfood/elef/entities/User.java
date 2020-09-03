@@ -19,25 +19,18 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @Entity
 @Table(name="ELEF_USER")
 public class User {
+	
 	@Id
-	@Column(name="USERID")
-	private int userId;
+	@Length(max=30)
+	@Column(name="EMAILID")
+	private String emailId;
 	
 	@NotEmpty(message="customer name should not be empty")
 	@Length(max=30)
 	@Column(name="NAME")
 	private String customerName;
 	
-	@NotEmpty(message="emailId should not be empty")
-	@Length(max=30)
-	@Column(name="EMAILID")
-	private String emailId;
-	
-	@NotEmpty(message="user name cannot be empty")
-	@Length(max=10)
-	@Column(name="USERNAME")
-	private String userName;
-	
+		
 	@NotEmpty(message="password cannot be empty")
 	@Length(max=10)
 	@Column(name="PASSWORD")
@@ -80,10 +73,8 @@ public class User {
 		
 	}
 
-	public User(int userId,
+	public User(String emailId,
 			@NotEmpty(message = "customer name should not be empty") @Length(max = 30) String customerName,
-			@NotEmpty(message = "emailId should not be empty") @Length(max = 30) String emailId,
-			@NotEmpty(message = "user name cannot be empty") @Length(max = 10) String userName,
 			@NotEmpty(message = "password cannot be empty") @Length(max = 10) String password,
 			@NotEmpty(message = "security question cannot be empty") @Length(max = 30) String security_question,
 			@NotEmpty(message = "security question cannot be empty") @Length(max = 30) String security_answer,
@@ -91,10 +82,8 @@ public class User {
 			@NotEmpty(message = "role should not be empty") @Pattern(regexp = "Admin|Customer") String role,
 			List<Address> address, CarryBox carryBox, List<Order> myOrders, Branch branch) {
 		super();
-		this.userId = userId;
-		this.customerName = customerName;
 		this.emailId = emailId;
-		this.userName = userName;
+		this.customerName = customerName;
 		this.password = password;
 		this.security_question = security_question;
 		this.security_answer = security_answer;
@@ -104,14 +93,6 @@ public class User {
 		this.carryBox = carryBox;
 		this.myOrders = myOrders;
 		this.branch = branch;
-	}
-
-	public int getUserId() {
-		return userId;
-	}
-
-	public void setUserId(int userId) {
-		this.userId = userId;
 	}
 
 	public String getCustomerName() {
@@ -128,14 +109,6 @@ public class User {
 
 	public void setEmailId(String emailId) {
 		this.emailId = emailId;
-	}
-
-	public String getUserName() {
-		return userName;
-	}
-
-	public void setUserName(String userName) {
-		this.userName = userName;
 	}
 
 	public String getPassword() {
