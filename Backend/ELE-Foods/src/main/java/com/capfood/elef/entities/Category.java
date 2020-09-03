@@ -12,6 +12,10 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
 
+import org.hibernate.validator.constraints.Length;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 
 
 @Entity
@@ -26,6 +30,7 @@ public class Category
 	
 	@NotEmpty(message="category Name should not be empty")
 	@Column(name="CATEGORYNAME")
+	@Length(max=15)
 	private String categoryName;
 	
 	
@@ -35,6 +40,8 @@ public class Category
 	@ManyToMany(fetch=FetchType.EAGER)
 	@JoinColumn(name="branch")
 	private List<Branch> branch;
+	
+
 	
 	public Category() {
 		
@@ -65,6 +72,7 @@ public class Category
 		this.categoryName = categoryName;
 	}
 
+	@JsonIgnore
 	public List<SubCategory> getSubCategories() {
 		return subCategories;
 	}

@@ -13,6 +13,8 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.Min;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 
 @Entity
 @Table(name="ELEF_CARRYBOX")
@@ -40,13 +42,13 @@ public class CarryBox{
 	
 	@OneToOne(mappedBy="carryBox")
 	@JoinColumn(name="CUSTOMER")
-	private Customer customer;
+	private User customer;
 	
 	public CarryBox() {
 		
 	}
 
-	public CarryBox(int boxId, int quantity, int cost, List<Item> itemlist, Customer customer) {
+	public CarryBox(int boxId, int quantity, int cost, List<Item> itemlist, User customer) {
 		super();
 		this.boxId = boxId;
 		this.quantity = quantity;
@@ -71,6 +73,7 @@ public class CarryBox{
 		this.quantity = quantity;
 	}
 
+	@JsonIgnore
 	public List<Item> getItemlist() {
 		return itemlist;
 	}
@@ -80,11 +83,11 @@ public class CarryBox{
 	}
 
 	
-	public Customer getCustomer() {
+	public User getCustomer() {
 		return customer;
 	}
 
-	public void setCustomer(Customer customer) {
+	public void setCustomer(User customer) {
 		this.customer = customer;
 	}
 

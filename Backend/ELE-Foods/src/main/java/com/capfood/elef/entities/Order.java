@@ -28,8 +28,6 @@ public class Order {
 	@Column(name="ID")
 	private int id;
 	
-	@Column(name="ORDERID")
-	private int orderId;
 	
 	@Column(name="ORDERDATE")
 	private LocalDate orderDate;
@@ -55,7 +53,7 @@ public class Order {
 	
 	@ManyToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="customer")
-	private Customer customer;
+	private User customer;
  
 	
 	@OneToMany(mappedBy="ordered")
@@ -65,11 +63,10 @@ public class Order {
 		
 	}
 
-	public Order(int id, int orderId, LocalDate orderDate, LocalTime orderTime, int quantity, double orderPrice,
-			String orderStatus, String statusDescription, Branch branch_order, Customer customer, List<Item> items) {
+	public Order(int id,  LocalDate orderDate, LocalTime orderTime, int quantity, double orderPrice,
+			String orderStatus, String statusDescription, Branch branch_order, User customer, List<Item> items) {
 		super();
 		this.id = id;
-		this.orderId = orderId;
 		this.orderDate = orderDate;
 		this.orderTime = orderTime;
 		this.quantity = quantity;
@@ -89,13 +86,7 @@ public class Order {
 		this.id = id;
 	}
 
-	public int getOrderId() {
-		return orderId;
-	}
 
-	public void setOrderId(int orderId) {
-		this.orderId = orderId;
-	}
 
 	public LocalDate getOrderDate() {
 		return orderDate;
@@ -153,11 +144,11 @@ public class Order {
 		this.branch_order = branch_order;
 	}
 
-	public Customer getCustomer() {
+	public User getCustomer() {
 		return customer;
 	}
 
-	public void setCustomer(Customer customer) {
+	public void setCustomer(User customer) {
 		this.customer = customer;
 	}
 
@@ -172,11 +163,12 @@ public class Order {
 
 	@Override
 	public String toString() {
-		return "Order [id=" + id + ", orderId=" + orderId + ", orderDate=" + orderDate + ", orderTime=" + orderTime
-				+ ", quantity=" + quantity + ", orderPrice=" + orderPrice + ", orderStatus=" + orderStatus
-				+ ", statusDescription=" + statusDescription + ", branch_order=" + branch_order + ", customer="
-				+ customer + ", items=" + items + "]";
+		return "Order [id=" + id + ", orderDate=" + orderDate + ", orderTime=" + orderTime + ", quantity=" + quantity
+				+ ", orderPrice=" + orderPrice + ", orderStatus=" + orderStatus + ", statusDescription="
+				+ statusDescription + ", branch_order=" + branch_order + ", customer=" + customer + ", items=" + items
+				+ "]";
 	}
+
 
 
 	

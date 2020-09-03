@@ -59,21 +59,19 @@ public class Address {
 	
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name="customer")
-	private Customer customer;
+	private User customer;
 	
 	
 	public Address() {
 		
 	}
 
-
 	public Address(int addressId, @Length(max = 25) String name,
 			@NotEmpty(message = "Address should not be empty") @Length(max = 30) String line1,
 			@Length(max = 30) String line2,
 			@NotEmpty(message = "City should not be empty") @Length(max = 20) String city,
 			@Length(max = 30) String landmark,
-			@NotEmpty(message = "Mobile Number should not be empty") @Length(max = 10) String mobileNumber,
-			Customer customer) {
+			@NotEmpty(message = "Mobile Number should not be empty") @Length(max = 10) String mobileNumber, User customer) {
 		super();
 		this.addressId = addressId;
 		this.name = name;
@@ -155,16 +153,13 @@ public class Address {
 		this.mobileNumber = mobileNumber;
 	}
 
-	@JsonIgnore
-	public Customer getCustomer() {
+	public User getCustomer() {
 		return customer;
 	}
 
-
-	public void setCustomer(Customer customer) {
+	public void setCustomer(User customer) {
 		this.customer = customer;
 	}
-
 
 	@Override
 	public String toString() {
@@ -172,6 +167,11 @@ public class Address {
 				+ ", city=" + city + ", landmark=" + landmark + ", mobileNumber=" + mobileNumber + ", customer="
 				+ customer + "]";
 	}
+
+
+	
+
+	
 	
 	
 }

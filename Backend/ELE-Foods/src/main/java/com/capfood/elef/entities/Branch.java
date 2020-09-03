@@ -13,6 +13,8 @@ import javax.validation.constraints.NotEmpty;
 
 import org.hibernate.validator.constraints.Length;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name="ELEF_BRANCH")
 public class Branch {
@@ -35,7 +37,7 @@ public class Branch {
 	private String contactNumber;
 	
 	@OneToOne
-	private Admin admin;
+	private User admin;
 	
 	@OneToMany(mappedBy="branch_order")
 	private List<Order> orders;
@@ -53,7 +55,7 @@ public class Branch {
 
 	public Branch(int branchId,
 			@NotEmpty(message = " Branch Name should not be empty") @Length(max = 25) String branchName,
-			@Length(max = 10) @NotEmpty(message = "Name should not be empty") String contactNumber, Admin admin,
+			@Length(max = 10) @NotEmpty(message = "Name should not be empty") String contactNumber, User admin,
 			List<Order> orders, List<Item> items, List<Category> category) {
 		super();
 		this.branchId = branchId;
@@ -90,14 +92,17 @@ public class Branch {
 	}
 
 	
-	public Admin getAdmin() {
+
+
+	public User getAdmin() {
 		return admin;
 	}
 
-	public void setAdmin(Admin admin) {
+	public void setAdmin(User admin) {
 		this.admin = admin;
 	}
 
+	@JsonIgnore
 	public List<Order> getOrders() {
 		return orders;
 	}

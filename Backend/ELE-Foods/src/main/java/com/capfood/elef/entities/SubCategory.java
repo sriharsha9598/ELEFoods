@@ -9,6 +9,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import org.hibernate.validator.constraints.Length;
+
 @Entity
 @Table(name="ELEF_SUBCATEGORY")
 public class SubCategory{
@@ -18,11 +20,14 @@ public class SubCategory{
 	private int subCategoryId;
 	
 	@Column(name="SUBCATEGORYNAME")
+	@Length(max=15)
 	private String subCategoryName;
 
 	@ManyToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="category")
 	private Category category;
+	
+
 	
 	public SubCategory() {
 		
