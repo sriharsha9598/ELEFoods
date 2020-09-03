@@ -23,25 +23,25 @@ insert into elef_carrybox values(1004,0,0 );
 insert into elef_carrybox values(1005,0,0 );
 insert into elef_carrybox values(1006,0,0 );
 
-insert into elef_user values(6001,'Pravallika','pravallikakonduru17@gmail.com','9999999999','Prav@12','Admin','chocolate','what is your favourite food','Pravallika',1001);
-insert into elef_user values(6002,'Moksha','moksha@gmail.com','9999999998','Moksh@12','Admin','singing','what is your hobbie','Moksha',1002);
-insert into elef_user values(6003,'Harsha','sriharshap.158@gmail.com','9999999997','Harsh@12','Customer','chicken','what is your favourite food','Harsha',1003);
-insert into elef_user values(6004,'vidya','vidya@gmail.com','9999999996','vidya@12','Admin','dancing','what is your favourite hobbie','Vidya',1004);
-insert into elef_user values(6005,'Swati','swati@gmail.com','9999999995','Swa@12','Customer','swati','what is your name','swati',1005);
-insert into elef_user values(6006,'Aarohi','aar@gmail.com','9999999994','Aar@12','Customer','chocolate','what is your favourite food','Aarohi',1006);
+insert into elef_user values('pravallikakonduru17@gmail.com','Pravallika','9999999999','Prav@12','Admin','chocolate','what is your favourite food',1001);
+insert into elef_user values('moksha@gmail.com','Moksha','9999999998','Moksh@12','Admin','singing','what is your hobbie',1002);
+insert into elef_user values('sriharsha.p158@gmail.com','Harsha','9999999997','Harsh@12','Customer','chicken','what is your favourite food',1003);
+insert into elef_user values('vidya@gmail.com','vidya','9999999996','vidya@12','Admin','dancing','what is your favourite hobbie',1004);
+insert into elef_user values('swati@gmail.com','Swati','9999999995','Swa@12','Customer','swati','what is your name',1005);
+insert into elef_user values('aar@gmail.com','Aarohi','9999999994','Aar@12','Customer','chocolate','what is your favourite food',1006);
 
-insert into elef_branch values(2001,'Hyderabad','500234',6001);
-insert into elef_branch values(2002,'Vijayawada','500235',6002);
-insert into elef_branch values(2003,'Tirupati','500236',6004);
+insert into elef_branch values(2001,'Hyderabad','500234','pravallikakonduru17@gmail.com');
+insert into elef_branch values(2002,'Vijayawada','500235','moksha@gmail.com');
+insert into elef_branch values(2003,'Tirupati','500236','vidya@gmail.com');
 
 
-insert into elef_address values(3001,'Guntur','Temple','D-No:2-10','Abbanagudavalli','9999999999','Pravallika',6001);
-insert into elef_address values(3002,'Vijayawada','Road','D-No:2-11','Kolluru','9999999999','Pravallika',6001);
-insert into elef_address values(3003,'Guntur','Temple','D-No:2-12','Khammam','9999999999','Pravallika',6002);
-insert into elef_address values(3004,'Guntur','Road','D-No:2-13','Pumping wellroad','9999999999','Pravallika',6003);
-insert into elef_address values(3005,'Guntur','Temple','D-No:2-14','Ravikampadu','9999999999','Pravallika',6004);
-insert into elef_address values(3006,'Guntur','Road','D-No:2-15','chintalamma vari veedi','9999999999','Pravallika',6005);
-insert into elef_address values(3007,'Guntur','Temple','D-No:2-16','jammichettu','9999999999','Pravallika',6006);
+insert into elef_address values(3001,'Guntur','Temple','D-No:2-10','Abbanagudavalli','9999999999','Pravallika','pravallikakonduru17@gmail.com');
+insert into elef_address values(3002,'Vijayawada','Road','D-No:2-11','Kolluru','9999999999','Moksha','moksha@gmail.com');
+insert into elef_address values(3003,'Guntur','Temple','D-No:2-12','Khammam','9999999999','Harsha','sriharsha.p158@gmail.com');
+insert into elef_address values(3004,'Guntur','Road','D-No:2-13','Pumping wellroad','9999999999','Sri Harsha','sriharsha.p158@gmail.com');
+insert into elef_address values(3005,'Guntur','Temple','D-No:2-14','Ravikampadu','9999999999','Swathi','swati@gmail.com');
+insert into elef_address values(3006,'Guntur','Road','D-No:2-15','chintalamma vari veedi','9999999999','Aarohi','aar@gmail.com');
+insert into elef_address values(3007,'Guntur','Temple','D-No:2-16','jammichettu','9999999999','Aarohi','aar@gmail.com');
 
 
 insert into elef_category values(7001,'Food',2001);
@@ -109,13 +109,4 @@ insert into elef_item values (2033,0,'','Sprite',45,'','','pic33','ns','veg',200
 insert into elef_item values (2034,1,'','Coke Tin',60,'','','pic34','ns','veg',2001,'','',5007);
 insert into elef_item values (2035,1,'','Fanta',45,'','','pic35','ns','veg',2001,'','',5007);
 commit;
-
-
-
-
-
-
-
-
-
 
