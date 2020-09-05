@@ -84,12 +84,7 @@ public class SubCategory{
 		this.items = items;
 	}
 
-	@Override
-	public String toString() {
-		return "SubCategory [subCategoryId=" + subCategoryId + ", subCategoryName=" + subCategoryName + ", category="
-				+ category + "]";
-	}
-	 
+
 	
     
 }

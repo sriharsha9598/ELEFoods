@@ -2,7 +2,6 @@ package com.capfood.elef.entities;
 
 
 
-import java.util.Arrays;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -10,8 +9,8 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
@@ -57,6 +56,9 @@ public class Item  {
 	@Length(max=10)
     private String type;
 	
+	@Column(name="quantity")
+	private int quantity;
+	
 	@Length(max=11)
 	private String picture;
 	
@@ -74,9 +76,8 @@ public class Item  {
 	@JoinColumn(name="carryBox")
 	private CarryBox carryBox;
 
-	@ManyToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="ordered")
-	private Order ordered;
+	@OneToMany(mappedBy="item")
+	private List<Order> orders;
 
 	@ManyToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="SUBCATEGORY")
@@ -88,11 +89,13 @@ public class Item  {
 	}
 
 
+
+
 	public Item(int itemId, @Length(max = 25) @NotEmpty(message = "iten name cannot be empty") String itemName,
 			@Length(max = 50) String itemDescription, @Min(0) double itemPrice, @Length(max = 10) String speciality,
-			boolean active, @Pattern(regexp = "veg|non-veg") @Length(max = 10) String type,
+			boolean active, @Pattern(regexp = "veg|non-veg") @Length(max = 10) String type, int quantity,
 			@Length(max = 11) String picture, byte[] picByte, String pic_type, Branch branch, CarryBox carryBox,
-			Order ordered, SubCategory subCategory) {
+			List<Order> orders, SubCategory subCategory) {
 		super();
 		this.itemId = itemId;
 		this.itemName = itemName;
@@ -101,14 +104,17 @@ public class Item  {
 		this.speciality = speciality;
 		this.active = active;
 		this.type = type;
+		this.quantity = quantity;
 		this.picture = picture;
 		this.picByte = picByte;
 		this.pic_type = pic_type;
 		this.branch = branch;
 		this.carryBox = carryBox;
-		this.ordered = ordered;
+		this.orders = orders;
 		this.subCategory = subCategory;
 	}
+
+
 
 
 	public int getItemId() {
@@ -179,6 +185,13 @@ public class Item  {
 		this.type = type;
 	}
 
+	public int getQuantity() {
+		return quantity;
+	}
+
+	public void setQuantity(int quantity) {
+		this.quantity = quantity;
+	}
 
 	public String getPicture() {
 		return picture;
@@ -227,6 +240,7 @@ public class Item  {
 		this.subCategory = subCategory;
 	}
 
+	@JsonIgnore
 	public CarryBox getCarryBox() {
 		return carryBox;
 	}
@@ -236,24 +250,15 @@ public class Item  {
 		this.carryBox = carryBox;
 	}
 
-
-	public Order getOrdered() {
-		return ordered;
+	@JsonIgnore
+	public List<Order> getOrders() {
+		return orders;
 	}
 
 
-	public void setOrdered(Order ordered) {
-		this.ordered = ordered;
+	public void setOrdered(List<Order> orders) {
+		this.orders = orders;
 	}
 
 
-	@Override
-	public String toString() {
-		return "Item [itemId=" + itemId + ", itemName=" + itemName + ", itemDescription=" + itemDescription
-				+ ", itemPrice=" + itemPrice + ", speciality=" + speciality + ", active=" + active + ", type=" + type
-				+ ", picture=" + picture + ", picByte=" + Arrays.toString(picByte) + ", pic_type=" + pic_type
-				+ ", branch=" + branch + ", carryBox=" + carryBox + ", ordered=" + ordered + ", subCategory="
-				+ subCategory + "]";
-	}
-	
 }

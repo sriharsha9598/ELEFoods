@@ -35,4 +35,45 @@ public class ExceptionHandlerControllerAdvice extends ResponseEntityExceptionHan
 		return error;
 	}
 
+	@ExceptionHandler(OrderContainsInactiveItemsException.class)
+	@ResponseStatus(value = HttpStatus.NOT_ACCEPTABLE)
+	public @ResponseBody ExceptionResponse handleOrderContainsInactiveItems(final OrderContainsInactiveItemsException exception,final HttpServletRequest request) {
+		ExceptionResponse error = new ExceptionResponse(exception.getLocalizedMessage());
+		return error;
+	}
+
+	@ExceptionHandler(ResourceNotFoundException.class)
+	@ResponseStatus(value = HttpStatus.NOT_FOUND)
+	public @ResponseBody ExceptionResponse handleResourceNotFoundException(final ResourceNotFoundException exception,final HttpServletRequest request) {
+		ExceptionResponse error = new ExceptionResponse(exception.getLocalizedMessage());
+		return error;
+	}
+	
+	@ExceptionHandler(CarryBoxEmptyException.class)
+	@ResponseStatus(value = HttpStatus.NO_CONTENT)
+	public @ResponseBody ExceptionResponse handleCarryBoxEmptyException(final CarryBoxEmptyException exception,final HttpServletRequest request) {
+		ExceptionResponse error = new ExceptionResponse(exception.getLocalizedMessage());
+		return error;
+	}
+	
+	@ExceptionHandler(NotAnAdminException.class)
+	@ResponseStatus(value = HttpStatus.NOT_ACCEPTABLE)
+	public @ResponseBody ExceptionResponse NotAnAdminException(final NotAnAdminException exception,final HttpServletRequest request) {
+		ExceptionResponse error = new ExceptionResponse(exception.getLocalizedMessage());
+		return error;
+	}
+	
+	@ExceptionHandler(InvalidDetailsForPasswordChangeException.class)
+	@ResponseStatus(value = HttpStatus.NOT_FOUND)
+	public @ResponseBody ExceptionResponse handleInvalidDetailsForPasswordChangeException(final InvalidDetailsForPasswordChangeException exception,final HttpServletRequest request) {
+		ExceptionResponse error = new ExceptionResponse(exception.getLocalizedMessage());
+		return error;
+	}
+	
+	@ExceptionHandler(UserExistsException.class)
+	@ResponseStatus(value = HttpStatus.FOUND)
+	public @ResponseBody ExceptionResponse handleUserExistsException(final UserExistsException exception,final HttpServletRequest request) {
+		ExceptionResponse error = new ExceptionResponse(exception.getLocalizedMessage());
+		return error;
+	}
 }

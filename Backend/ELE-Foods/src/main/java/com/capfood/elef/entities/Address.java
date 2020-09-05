@@ -3,12 +3,15 @@ package com.capfood.elef.entities;
 
 
 
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
 
@@ -61,17 +64,25 @@ public class Address {
 	@JoinColumn(name="customer")
 	private User customer;
 	
+	@OneToMany(mappedBy="address")
+	private List<Order> orders;
+	
+	
 	
 	public Address() {
 		
 	}
+
+	
+
 
 	public Address(int addressId, @Length(max = 25) String name,
 			@NotEmpty(message = "Address should not be empty") @Length(max = 30) String line1,
 			@Length(max = 30) String line2,
 			@NotEmpty(message = "City should not be empty") @Length(max = 20) String city,
 			@Length(max = 30) String landmark,
-			@NotEmpty(message = "Mobile Number should not be empty") @Length(max = 10) String mobileNumber, User customer) {
+			@NotEmpty(message = "Mobile Number should not be empty") @Length(max = 10) String mobileNumber,
+			User customer, List<Order> orders) {
 		super();
 		this.addressId = addressId;
 		this.name = name;
@@ -81,7 +92,10 @@ public class Address {
 		this.landmark = landmark;
 		this.mobileNumber = mobileNumber;
 		this.customer = customer;
+		this.orders = orders;
 	}
+
+
 
 
 	public int getAddressId() {
@@ -153,6 +167,18 @@ public class Address {
 		this.mobileNumber = mobileNumber;
 	}
 
+	@JsonIgnore
+	public List<Order> getOrders() {
+		return orders;
+	}
+
+
+	public void setOrders(List<Order> orders) {
+		this.orders = orders;
+	}
+
+
+	@JsonIgnore
 	public User getCustomer() {
 		return customer;
 	}
@@ -161,19 +187,6 @@ public class Address {
 		this.customer = customer;
 	}
 
-	@Override
-	public String toString() {
-		return "Address [addressId=" + addressId + ", name=" + name + ", line1=" + line1 + ", line2=" + line2
-				+ ", city=" + city + ", landmark=" + landmark + ", mobileNumber=" + mobileNumber + ", customer="
-				+ customer + "]";
-	}
-
-
-	
-
-	
-	
-	
 }
 	
 

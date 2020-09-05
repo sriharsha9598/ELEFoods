@@ -1,5 +1,6 @@
 package com.capfood.elef.entities;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -54,7 +55,7 @@ public class User {
     private String role;
 	
     @OneToMany(mappedBy="customer")
-    private List<Address> address;
+    private List<Address> address=new ArrayList<>();
     
     @OneToOne
     private CarryBox carryBox;
@@ -151,7 +152,6 @@ public class User {
 		this.role = role;
 	}
 
-	@JsonIgnore
 	public List<Address> getAddress() {
 		return address;
 	}
@@ -160,6 +160,7 @@ public class User {
 		this.address = address;
 	}
 
+	@JsonIgnore
 	public CarryBox getCarryBox() {
 		return carryBox;
 	}
@@ -168,7 +169,6 @@ public class User {
 		this.carryBox = carryBox;
 	}
 
-	@JsonIgnore
 	public List<Order> getMyOrders() {
 		return myOrders;
 	}
@@ -178,6 +178,7 @@ public class User {
 		this.myOrders = myOrders;
 	}
 
+	@JsonIgnore
 	public Branch getBranch() {
 		return branch;
 	}
@@ -186,6 +187,25 @@ public class User {
 		this.branch = branch;
 	}
 	
+
+	public void addAddress(Address address) {
+		address.setCustomer(this);
+		this.getAddress().add(address);
+	}
 	
+	public void removeAddress(Address address) {
+		address.setCustomer(null);
+		this.getAddress().remove(address);
+	}
+	
+	public void addOrder(Order order) {
+		order.setCustomer(this);
+		this.getMyOrders().add(order);
+	}
+	
+	public void removeOrder(Order order) {
+		order.setCustomer(null);
+		this.getMyOrders().remove(order);
+	}
 	
 }

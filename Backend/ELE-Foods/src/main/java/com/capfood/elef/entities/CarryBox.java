@@ -13,7 +13,6 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.Min;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 
 @Entity
@@ -26,15 +25,10 @@ public class CarryBox{
 	@Column(name="BOXID")
 	private int boxId;
 	
-	
-	@Column(name="QUANTITY")
-	@Min(value=0)
-	private int quantity;
-	
 
-	@Column(name="total_cost")
+	@Column(name="totalCost")
 	@Min(value=0)
-	private int total_cost;
+	private double totalCost;
 	
 	@OneToMany(mappedBy="carryBox")
 	private List<Item> itemlist;
@@ -48,13 +42,12 @@ public class CarryBox{
 		
 	}
 
-	public CarryBox(int boxId, int quantity, int cost, List<Item> itemlist, User customer) {
+	public CarryBox(int boxId, double totalCost, List<Item> itemlist, User customer) {
 		super();
 		this.boxId = boxId;
-		this.quantity = quantity;
 		this.itemlist = itemlist;
 		this.customer = customer;
-		this.total_cost = cost;
+		this.totalCost = totalCost;
 	}
 
 	public int getBoxId() {
@@ -65,15 +58,6 @@ public class CarryBox{
 		this.boxId = boxId;
 	}
 
-	public int getQuantity() {
-		return quantity;
-	}
-
-	public void setQuantity(int quantity) {
-		this.quantity = quantity;
-	}
-
-	@JsonIgnore
 	public List<Item> getItemlist() {
 		return itemlist;
 	}
@@ -91,21 +75,27 @@ public class CarryBox{
 		this.customer = customer;
 	}
 
-	public int getTotal_cost() {
-		return total_cost;
+	public double getTotal_cost() {
+		return totalCost;
 	}
 
-	public void setTotal_cost(int total_cost) {
-		this.total_cost = total_cost;
+	public void setTotal_cost(double total_cost) {
+		this.totalCost = total_cost;
 	}
 
-	@Override
-	public String toString() {
-		return "CarryBox [boxId=" + boxId + ", quantity=" + quantity + ", total_cost=" + total_cost + ", itemlist="
-				+ itemlist + ", customer=" + customer + "]";
+	public void addItem(Item item) {
+		item.setCarryBox(this);
+		this.getItemlist().add(item);
 	}
-
 	
+	public void removeItem(Item item) {
+		item.setCarryBox(null);
+		this.getItemlist().remove(item);
+	}
+	
+
+
+		
 	
 	
 }
