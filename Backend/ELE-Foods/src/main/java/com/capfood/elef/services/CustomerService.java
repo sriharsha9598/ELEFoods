@@ -2,15 +2,30 @@ package com.capfood.elef.services;
 
 import java.util.List;
 
-import com.capfood.elef.entities.Branch;
+import com.capfood.elef.entities.Address;
+import com.capfood.elef.entities.CarryBox;
 import com.capfood.elef.entities.Category;
 import com.capfood.elef.entities.Item;
+import com.capfood.elef.entities.Order;
 import com.capfood.elef.entities.SubCategory;
+import com.capfood.elef.exceptions.OrderContainsInactiveItemsException;
+import com.capfood.elef.exceptions.OutOfLocationRangeException;
+import com.capfood.elef.exceptions.ResourceNotFoundException;
 
 public interface CustomerService {
 
-	public List<Item> getABranchItems(int branchId);
-	public List<Category> getABranchCategories(int branchId);
+	public List<Item> getABranchItems(int branchId) throws ResourceNotFoundException;
+	public List<Category> getABranchCategories(int branchId) throws ResourceNotFoundException;
 	public List<SubCategory> getABranchSubCategories(int branchId);
-	public Branch getABranchDetails(int branchId);
+	public CarryBox getACarryBoxDetails(String emailId);
+	public List<Address> getAnUserAdresses(String emailId) throws ResourceNotFoundException;
+	public boolean addANewAddress(String emailId,Address address);
+	public boolean deleteAnAddress(int addressId);
+	public List<Order> getAnUserOrders(String emailId) throws ResourceNotFoundException;
+	public boolean placeANewOrder(String emailId,int branchId,int addressId) throws ResourceNotFoundException,OutOfLocationRangeException,OrderContainsInactiveItemsException;
+	public Order trackAnOrder(int orderId)throws ResourceNotFoundException;
+	public boolean addItemToCarryBox(String emailId, int itemId) throws OrderContainsInactiveItemsException;
+	public boolean deleteACarryBoxItem(String emailId,int itemId);
+	public boolean updateACarryBoxItem(String emailId,int itemId,int quantity);
+	
 }

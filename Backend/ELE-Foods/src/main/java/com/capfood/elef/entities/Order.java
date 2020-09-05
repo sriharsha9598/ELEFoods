@@ -4,7 +4,6 @@ package com.capfood.elef.entities;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,7 +11,6 @@ import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -28,16 +26,18 @@ public class Order {
 	@Column(name="ID")
 	private int id;
 	
+	@Column(name="ORDERID")
+	private int orderId;
+	
+	@Column(name="quantity")
+	private int quantity;
 	
 	@Column(name="ORDERDATE")
 	private LocalDate orderDate;
 	
 	@Column(name="ORDERTIME")
 	private LocalTime orderTime;
-	
-	@Column(name="QUANTITY")
-	private int quantity;
-	
+		
 	@Column(name="ORDERPRICE")
 	private double orderPrice;
 	
@@ -48,6 +48,10 @@ public class Order {
 	private String statusDescription;
 	
 	@ManyToOne(fetch=FetchType.EAGER)
+	@JoinColumn(name="address")
+	public Address address;
+	
+	@ManyToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="BRANCH_ORDER")
 	private Branch branch_order;
 	
@@ -56,27 +60,60 @@ public class Order {
 	private User customer;
  
 	
-	@OneToMany(mappedBy="ordered")
- 	private List<Item> items;
+	@ManyToOne(fetch=FetchType.EAGER)
+	@JoinColumn(name="item") 	
+	private Item item;
 	
 	public Order() {
 		
 	}
 
-	public Order(int id,  LocalDate orderDate, LocalTime orderTime, int quantity, double orderPrice,
-			String orderStatus, String statusDescription, Branch branch_order, User customer, List<Item> items) {
+	
+
+	
+
+
+	public Order(int id, int orderId, int quantity, LocalDate orderDate, LocalTime orderTime, double orderPrice,
+			String orderStatus, String statusDescription, Address address, Branch branch_order, User customer,
+			Item item) {
 		super();
 		this.id = id;
+		this.orderId = orderId;
+		this.quantity = quantity;
 		this.orderDate = orderDate;
 		this.orderTime = orderTime;
-		this.quantity = quantity;
 		this.orderPrice = orderPrice;
 		this.orderStatus = orderStatus;
 		this.statusDescription = statusDescription;
+		this.address = address;
 		this.branch_order = branch_order;
 		this.customer = customer;
-		this.items = items;
+		this.item = item;
 	}
+
+
+
+
+
+	public int getQuantity() {
+		return quantity;
+	}
+
+	public void setQuantity(int quantity) {
+		this.quantity = quantity;
+	}
+
+	public Address getAddress() {
+		return address;
+	}
+
+
+
+	public void setAddress(Address address) {
+		this.address = address;
+	}
+
+
 
 	public int getId() {
 		return id;
@@ -102,14 +139,6 @@ public class Order {
 
 	public void setOrderTime(LocalTime orderTime) {
 		this.orderTime = orderTime;
-	}
-
-	public int getQuantity() {
-		return quantity;
-	}
-
-	public void setQuantity(int quantity) {
-		this.quantity = quantity;
 	}
 
 	public double getOrderPrice() {
@@ -145,6 +174,7 @@ public class Order {
 		this.branch_order = branch_order;
 	}
 
+	@JsonIgnore
 	public User getCustomer() {
 		return customer;
 	}
@@ -153,24 +183,39 @@ public class Order {
 		this.customer = customer;
 	}
 
-	@JsonIgnore
-	public List<Item> getItems() {
-		return items;
+	public Item getItem() {
+		return item;
 	}
 
-	public void setItems(List<Item> items) {
-		this.items = items;
-	}
-
-	@Override
-	public String toString() {
-		return "Order [id=" + id + ", orderDate=" + orderDate + ", orderTime=" + orderTime + ", quantity=" + quantity
-				+ ", orderPrice=" + orderPrice + ", orderStatus=" + orderStatus + ", statusDescription="
-				+ statusDescription + ", branch_order=" + branch_order + ", customer=" + customer + ", items=" + items
-				+ "]";
+	public void setItem(Item item) {
+		this.item = item;
 	}
 
 
+
+	public int getOrderId() {
+		return orderId;
+	}
+
+
+
+	public void setOrderId(int orderId) {
+		this.orderId = orderId;
+	}
+	
+	
+
+//	public void addItem(Item item) {
+//		item.setOrdered(this);
+//		this.getItems().add(item);
+//	}
+//	
+//	public void removeItem(Item item) {
+//		item.setOrdered(null);
+//		this.getItems().remove(item);
+//	}
+
+	
 
 	
 	
