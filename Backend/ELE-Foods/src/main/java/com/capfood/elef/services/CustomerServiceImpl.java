@@ -3,7 +3,9 @@ package com.capfood.elef.services;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.transaction.Transactional;
 
@@ -61,8 +63,14 @@ public class CustomerServiceImpl implements CustomerService {
 	}
 
 	@Override
-	public CarryBox getACarryBoxDetails(String emailId) {
+	public CarryBox getACarryBoxDetails(String emailId) throws ResourceNotFoundException{
+		try {
 		return dao.getAnUserDetails(emailId).getCarryBox();
+		}
+		catch(Exception e) {
+			throw new ResourceNotFoundException("Carry Box not Found!!");
+			
+		}
 	}
 
 	@Override
@@ -123,6 +131,7 @@ public class CustomerServiceImpl implements CustomerService {
 			Address address=dao.getAnAddressDetails(addressId);
 			
 			try {
+	//If carry box is empty when placing order, exception is raised
 			if(user.getCarryBox().getItemlist().size()==0) {
 				throw new ResourceNotFoundException("Your CarryBox is empty!! Please add some items to proceed..");
 			}
@@ -134,6 +143,7 @@ public class CustomerServiceImpl implements CustomerService {
 			List<Item> itemList=user.getCarryBox().getItemlist();
 			
 			
+	//If the order's address is away from the branch's location, exception is raised
 			for(int i=0;i<user.getAddress().size();i++) {
 				if(user.getAddress().get(i).getAddressId()==addressId) {
 					if(!(user.getAddress().get(i).getCity().equalsIgnoreCase(branch.getBranchName()))){
@@ -142,6 +152,7 @@ public class CustomerServiceImpl implements CustomerService {
 				}
 			}
 			
+	//If carry box contains inactive items when placing order, exception is raised
 			for(int i=0;i<itemList.size();i++) {
 				if(!itemList.get(i).isActive()) {
 					throw new OrderContainsInactiveItemsException("Sorry, Some Items in your Carry Box are currently Inactive!!");
@@ -157,6 +168,8 @@ public class CustomerServiceImpl implements CustomerService {
 	    	order.setOrderStatus("Placed");
 	    	order.setOrderTime(LocalTime.now());
 	    	order.setStatusDescription("Your Order has been placed and you will updated soon about your delivery");
+	    	
+	   //adding the order with a list of items
 	    	for(int i=0;i<itemList.size();i++) {
 		    	order.setId(dao.generatePrimaryIdForOrder());
 		    	order.setItem(itemList.get(i));
@@ -165,18 +178,17 @@ public class CustomerServiceImpl implements CustomerService {
 		    	dao.placeAnOrder(order);
 	    	}
 	    	
-//	    	for(int i=0;i<user.getCarryBox().getItemlist().size();i++) {
-//	    		user.getCarryBox().removeItem(itemList.get(i));
-//	    	}
-	    	
+	   //after placing the order successfully, clearing the carry box
 	    	while(user.getCarryBox().getItemlist().size()!=0) {
 	    		user.getCarryBox().removeItem(user.getCarryBox().getItemlist().get(0));
 	    	}
 	    	
+	   //after placing the order successfully, carryBox's cost is set to zero
 	    	user.getCarryBox().setTotal_cost(0);
 		    dao.updateCarryBox(user.getCarryBox());
 			return true;	
 	}
+	
 	
 	@Override
 	public Order trackAnOrder(int orderId) throws ResourceNotFoundException {
@@ -188,8 +200,9 @@ public class CustomerServiceImpl implements CustomerService {
 		}
 	}
 	
+	
 	@Override
-	public boolean addItemToCarryBox(String emailId, int itemId) throws OrderContainsInactiveItemsException {
+	public boolean addItemToCarryBox(String emailId, int itemId){
 		try {
 		Item item=dao.getAnItemDetails(itemId);
 		User user=new User();
@@ -198,6 +211,8 @@ public class CustomerServiceImpl implements CustomerService {
 		carryBox=dao.getACarryBoxDetails(user.getCarryBox().getBoxId());
 		item.setQuantity(1);
 		carryBox.addItem(item);
+		
+	//Increasing the carry box cost on adding an item to carry box
 		carryBox.setTotal_cost(carryBox.getTotal_cost()+item.getItemPrice());
 		dao.updateCarryBox(carryBox);
 		return true;
@@ -215,6 +230,8 @@ public class CustomerServiceImpl implements CustomerService {
 		CarryBox carryBox=new CarryBox();
 		carryBox=dao.getACarryBoxDetails(user.getCarryBox().getBoxId());
 		Item item=dao.getAnItemDetails(itemId);
+	
+	//subtracting the cost of item from the cary box's cost when deleting an item from carry box
 		for(int i=0;i<carryBox.getItemlist().size();i++) {
 			if(carryBox.getItemlist().get(i).getItemId()==itemId) {
 				carryBox.setTotal_cost(carryBox.getTotal_cost()-(carryBox.getItemlist().get(i).getQuantity()*item.getItemPrice()));
@@ -237,6 +254,8 @@ public class CustomerServiceImpl implements CustomerService {
 		CarryBox carryBox=new CarryBox();
 		carryBox=dao.getACarryBoxDetails(user.getCarryBox().getBoxId());
 		Item item=dao.getAnItemDetails(itemId);
+		
+	//increasing or decreasing the carry box's cost on updating quantity of any item in the carry box
 		for(int i=0;i<carryBox.getItemlist().size();i++) {
 			if(carryBox.getItemlist().get(i).getItemId()==itemId) {
 					carryBox.setTotal_cost(carryBox.getTotal_cost()-(carryBox.getItemlist().get(i).getQuantity()*item.getItemPrice()));
@@ -251,6 +270,32 @@ public class CustomerServiceImpl implements CustomerService {
 		catch (Exception ex) {
 			return false;
 		}
+	}
+
+	@Override
+	public Set<Item> searchItems(int branchId,String text) {
+		CharSequence searchText=text.toLowerCase();
+		Set<Item> items = new HashSet<>();
+		List<SubCategory> subCategories=getABranchSubCategories(branchId);
+		
+		Branch branch=dao.getABranchDetails(branchId);
+		
+	//Searching the items with the search text in their names
+		for(int i=0;i<branch.getItems().size();i++) {
+			if(branch.getItems().get(i).getItemName().toLowerCase().contains(searchText)) {
+				items.add(branch.getItems().get(i));
+			}
+		}
+
+	//Searching the categories with the search text in their names
+		for(int i=0;i<subCategories.size();i++) {
+			if(subCategories.get(i).getSubCategoryName().toLowerCase().contains(searchText)) {
+				for(int j=0;j<subCategories.get(i).getItems().size();j++) {
+					items.add(subCategories.get(i).getItems().get(j));
+				}
+			}
+		}
+		return items;
 	}
 	
 }

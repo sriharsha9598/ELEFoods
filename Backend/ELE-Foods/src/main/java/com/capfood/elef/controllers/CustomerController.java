@@ -1,6 +1,7 @@
 package com.capfood.elef.controllers;
 
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.EntityManager;
 
@@ -41,6 +42,7 @@ public class CustomerController {
 	 * Description: Called from customer home page to view all the existing items in his location
 	 * @param int: branchId
 	 * @return List<Item>: a List of all the existing items in the given branch
+	 * @throws ResourceNotFoundException : It is raised when no data is found with the given request
 	*/
 	@GetMapping("/getABranchItems/{branchId}")
 	public List<Item> getABranchItems(@PathVariable int branchId) throws ResourceNotFoundException
@@ -55,6 +57,7 @@ public class CustomerController {
 	 * Description: Called from customer home page to view all the existing categories of items in his location
 	 * @param int: branchId
 	 * @return List<Category>: a List of all the existing categories of items in the given branch
+	 * @throws ResourceNotFoundException : It is raised when no data is found with the given request
 	*/
 	@GetMapping("/getABranchCategories/{branchId}")
 	public List<Category> getABranchCategories(@PathVariable int branchId) throws ResourceNotFoundException
@@ -97,6 +100,7 @@ public class CustomerController {
 	 * Description: Called from customer account page and place order page to get a list of addresses saved
 	 * @param String: emailId
 	 * @return List<Address>: a list of Address objects saved to a user account
+	 * @throws ResourceNotFoundException : It is raised when no data is found with the given request	
 	*/
 	@GetMapping("/getAnUserAddresses/{emailId}") 
 	public List<Address> getAnUserAddresses(@PathVariable String emailId) throws ResourceNotFoundException
@@ -111,9 +115,10 @@ public class CustomerController {
 	 * Description: Called from customer account page and place order page to add a new address to the list of addresses saved
 	 * @param Address: address 
 	 * @return boolean: a boolean is returned to notify whether the new address is added or not
+	 * @throws ResourceNotFoundException : It is raised when no data is found with the given request
 	*/
 	@PostMapping("/addANewAddress/{emailId}")
-	public boolean addANewAddress(@PathVariable String emailId, @RequestBody Address address)
+	public boolean addANewAddress(@PathVariable String emailId, @RequestBody Address address) throws ResourceNotFoundException
 	{
 		return service.addANewAddress(emailId,address);
 	}
@@ -138,6 +143,7 @@ public class CustomerController {
 	 * Description: Called from customer account page to get a list of orders placed
 	 * @param String: emailId
 	 * @return List<Order>: a list of Order objects placed from the user account
+	 * @throws ResourceNotFoundException : It is raised when no data is found with the given request
 	*/
 	@GetMapping("/getAnUserOrders/{emailId}") 
 	public List<Order> getAnUserOrders(@PathVariable String emailId) throws ResourceNotFoundException
@@ -146,19 +152,26 @@ public class CustomerController {
 		return service.getAnUserOrders(emailId);
 	}
 	
-
-		
+	
+	/* Method:getAnUserOrders
+	 * Type: GetMapping
+	 * Description: Called from customer account page to get a list of orders placed
+	 * @param String: emailId
+	 * @return List<Order>: a list of Order objects placed from the user account
+	*/
 	@GetMapping("/placeANewOrder/{emailId}/{branchId}/{addressId}")
 	public boolean placeANewOrder(@PathVariable String emailId,@PathVariable int branchId,@PathVariable int addressId) throws ResourceNotFoundException,OutOfLocationRangeException,OrderContainsInactiveItemsException{
 		System.err.println(emailId);
 		return service.placeANewOrder(emailId, branchId, addressId);
 	}
 	
+
 	/* Method:trackAnOrder
 	 * Type: GetMapping
 	 * Description: Called from customer account page to get the status of an order placed
 	 * @param int: orderId
 	 * @return Order: an Order object placed from the user account
+	 * @throws ResourceNotFoundException : It is raised when no data is found with the given request
 	*/
 	@GetMapping("/trackAnOrder/{orderId}")
 	public Order trackAnOrder(@PathVariable int orderId) throws ResourceNotFoundException
@@ -167,32 +180,58 @@ public class CustomerController {
 	}
 	
 	
+	/* Method:addAnItemToCarryBox
+	 * Type: GetMapping
+	 * Description: Called from items page to add a desired item to carry box before buying
+	 * @param String:emailId
+	 * @param int: itemId
+	 * @return boolean: a boolean is returned to notify whether the item is added to carry box or not
+	*/
 	@GetMapping("addAnItemToCarryBox/{emailId}/{itemId}")
-	public boolean addItemToCarryBox(@PathVariable String emailId,@PathVariable int itemId) throws OrderContainsInactiveItemsException{
-		System.err.println("Entered Contorller");
-		return service.addItemToCarryBox(emailId, itemId);
-	
+	public boolean addItemToCarryBox(@PathVariable String emailId,@PathVariable int itemId){
+		return service.addItemToCarryBox(emailId, itemId);	
 	}
 
+	
+	/* Method:deleteACarryBoxItem
+	 * Type: GetMapping
+	 * Description: Called from Carry Box page to delete a item from carry box when not needed
+	 * @param String:emailId
+	 * @param int: itemId
+	 * @return boolean: a boolean is returned to notify whether the item is deleted from carry box or not
+	*/	
 	@GetMapping("/deleteACarryBoxItem/{emailId}/{itemId}")
-	public boolean deleteAnCarryBoxItem(@PathVariable String emailId,@PathVariable int itemId)
+	public boolean deleteACarryBoxItem(@PathVariable String emailId,@PathVariable int itemId)
 	{
 		return service.deleteACarryBoxItem(emailId,itemId);
 	}
-
+	
+	
+	/* Method:updateACarryBoxItem
+	 * Type: GetMapping
+	 * Description: Called from Carry Box page to update the quantity of an item in carry box
+	 * @param String:emailId
+	 * @param int: itemId
+	 * @param int: quantity
+	 * @return boolean: a boolean is returned to notify whether an item in the carry box is updated or not
+	*/
 	@GetMapping("/updateACarryBoxItem/{emailId}/{itemId}/{quantity}")
 	public boolean updateACarryBoxItem(@PathVariable String emailId,@PathVariable int itemId,@PathVariable int quantity){
 		return service.updateACarryBoxItem(emailId,itemId,quantity);
 	}
 	
 	
-	
-//	@GetMapping("/searchItems/{searchText}")
-//	public List<Item> searchItems(@PathVariable String searchText){
-//		return service.searchItems(searchText);
-//	}
-//	
-	
+	/* Method:searchItems
+	 * Type: GetMapping
+	 * Description: Called from home page to search for desired items or categories
+	 * @param int: branchId
+	 * @param String: searchText
+	 * @return Set<Item>: a set of items related to the search text is returned
+	*/
+	@GetMapping("/searchItems/{branchId}/{searchText}")
+	public Set<Item> searchItems(@PathVariable int branchId, @PathVariable String searchText){
+		return service.searchItems(branchId,searchText);
+	}
 	
 	
 }
