@@ -1,6 +1,7 @@
 package com.capfood.elef.services;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.springframework.web.multipart.MultipartFile;
 
@@ -35,16 +36,34 @@ public interface AdminService {
 
 	boolean editSubCategory(int categoryId, SubCategory subCategory);
 
-	Item getImageDetails(String imageName);
-
-	void uploadImage(MultipartFile file) throws IOException;
-
-	Category getCategory(int category);
-
 	Item getItem(int itemId);
-
-	int getRecentItemId();
+	
+	Category getCategory(int category);
 
 	void updateOrderStatus(int orderId, String orderStatus);
 
+	List<Item> getAllSearchItems(int adminId, String searchText);
+
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//
+//
+//Item getImageDetails(String imageName);
+//
+//void uploadImage(MultipartFile file) throws IOException;
+//
+//
+//int getRecentItemId();

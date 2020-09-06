@@ -122,7 +122,7 @@ public class CustomerDaoImpl implements CustomerDao {
 		return true;
 		}
 		catch(Exception ex) {
-			return true;
+			return false;
 		}
 	}
 	

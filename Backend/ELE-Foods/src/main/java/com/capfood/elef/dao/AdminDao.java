@@ -37,26 +37,33 @@ public interface AdminDao {
 
 	void deleteItem(int itemId);
 
-	void uploadImage(Item img);
 
-	byte[] compressBytes(byte[] data);
 
-	byte[] decompressBytes(byte[] data);
-
-	Item getImageDetails(String imageName);
-
+	
 	User getUserDetails(String userName);
 
 	Category getCategory(int category);
 
 	Item getItem(int itemId);
 
-	int getRecentItemId();
-
 	void updateOrderStatus(Order order);
 
 	List<Order> getOrders(int orderId);
 
+	Branch getBranch(int branchId);
+
 
 
 }
+
+
+//void uploadImage(Item img);
+
+//
+//byte[] compressBytes(byte[] data);
+//
+//byte[] decompressBytes(byte[] data);
+//
+//Item getImageDetails(String imageName);
+
+//int getRecentItemId();

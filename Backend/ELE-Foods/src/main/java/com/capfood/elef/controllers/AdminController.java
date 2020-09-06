@@ -1,5 +1,6 @@
 package com.capfood.elef.controllers;
 import java.io.IOException;
+import java.util.List;
 
 import javax.persistence.EntityManager;
 
@@ -257,25 +258,23 @@ public class AdminController {
 		return ResponseEntity.ok("Order Status Updated");
 	}
 	
-	@GetMapping("/getRecentItemId")
-	public ResponseEntity<Integer> getRecentItemId(){
-		int itemId = admin_service.getRecentItemId();
-		return ResponseEntity.ok(itemId);
+	/**
+	 * Method Description : Get all the search items from the given search text
+	 * @param branchId    : branch If from which the items to be retrieved
+	 * @param searchText
+	 * @return
+	 */
+	
+	@GetMapping("/getSearchItems/{branchId}/{searchText}")
+	public ResponseEntity<List<Item>> getAllSearchItems(@PathVariable int branchId, @PathVariable String searchText)
+	{
+		List<Item> items = admin_service.getAllSearchItems(branchId, searchText);
+	    return  ResponseEntity.ok(items); 
 	}
 	
 	
-	@PostMapping("/upload")
-	public ResponseEntity<?> uploadImage(@RequestParam("imageFile") MultipartFile file) throws IOException {
-		admin_service.uploadImage(file);
-		return ResponseEntity.ok(true);
-	}
 	
-
 	
-	public ResponseEntity<?> getImageDetails(String imageName) {
-		admin_service.getImageDetails(imageName);
-		return ResponseEntity.ok(true);
-	}
 
 
 }
@@ -296,7 +295,25 @@ public class AdminController {
 
 
 
-
+//@GetMapping("/getRecentItemId")
+//public ResponseEntity<Integer> getRecentItemId(){
+//	int itemId = admin_service.getRecentItemId();
+//	return ResponseEntity.ok(itemId);
+//}
+//
+//
+//@PostMapping("/upload")
+//public ResponseEntity<?> uploadImage(@RequestParam("imageFile") MultipartFile file) throws IOException {
+//	admin_service.uploadImage(file);
+//	return ResponseEntity.ok(true);
+//}
+//
+//
+//
+//public ResponseEntity<?> getImageDetails(String imageName) {
+//	admin_service.getImageDetails(imageName);
+//	return ResponseEntity.ok(true);
+//}
 
 
 

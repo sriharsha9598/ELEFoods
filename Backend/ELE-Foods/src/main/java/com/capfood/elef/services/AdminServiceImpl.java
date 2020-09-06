@@ -1,6 +1,7 @@
 package com.capfood.elef.services;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.transaction.Transactional;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.capfood.elef.dao.AdminDao;
+import com.capfood.elef.entities.Branch;
 import com.capfood.elef.entities.Category;
 import com.capfood.elef.entities.Item;
 import com.capfood.elef.entities.Order;
@@ -145,22 +147,7 @@ public class AdminServiceImpl implements AdminService {
 
 	
 	
-	@Override
-	public Item getImageDetails(String imageName) {
-		return admin_dao.getImageDetails(imageName);
-	}
-
-	@Override
-	public void uploadImage(MultipartFile file) throws IOException  {
-		//Item img = new Item(file.getOriginalFilename(),file.getBytes(), file.getContentType());
-		//admin_dao.uploadImage(img);
-		
-	}
-
-	@Override
-	public int getRecentItemId() {
-		return admin_dao.getRecentItemId();
-	}
+	
 
 	@Override
 	public void updateOrderStatus(int orderId, String orderStatus) {
@@ -187,6 +174,31 @@ public class AdminServiceImpl implements AdminService {
 
 
 	}
+
+	@Override
+	public List<Item> getAllSearchItems(int branchId, String searchText) {
+		Branch branch = admin_dao.getBranch(branchId);
+		   List<Item> items = branch.getItems();
+		    List<Item> new_items= new ArrayList<>();
+		    for(Item i : items) {
+		    	String words[] = i.getItemName().split(" ");
+		    	if(i.getItemName().substring(0, Math.min(searchText.length(), i.getItemName().length())).toLowerCase().equals(searchText.substring(0, Math.min(searchText.length(), i.getItemName().length())).toLowerCase() )){
+		    		new_items.add(i);
+		    	}
+		    	else
+		    	{
+		    		for(String word: words) {
+		    			if(word.substring(0, Math.min(searchText.length(), word.length())).toLowerCase().equals
+		    					(searchText.substring(0, Math.min(searchText.length(), word.length())).toLowerCase())) {
+		    				new_items.add(i);
+		    			}
+		    		}
+		    	}
+		    }
+		    return new_items;
+		    
+	
+	}
 }
 
 
@@ -204,3 +216,20 @@ public class AdminServiceImpl implements AdminService {
 //	
 //}
 
+//
+//@Override
+//public Item getImageDetails(String imageName) {
+//	return admin_dao.getImageDetails(imageName);
+//}
+//
+//@Override
+//public void uploadImage(MultipartFile file) throws IOException  {
+//	//Item img = new Item(file.getOriginalFilename(),file.getBytes(), file.getContentType());
+//	//admin_dao.uploadImage(img);
+//	
+//}
+//
+//@Override
+//public int getRecentItemId() {
+//	return admin_dao.getRecentItemId();
+//}

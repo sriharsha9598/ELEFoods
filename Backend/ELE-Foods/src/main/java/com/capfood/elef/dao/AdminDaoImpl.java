@@ -110,7 +110,10 @@ public class AdminDaoImpl implements AdminDao {
 	public Item getItem(int itemId) {
 		return itemRepository.getOne(itemId);
 	}
-	
+	@Override
+	public Branch getBranch(int branchId) {
+		return branchRepository.getOne(branchId);
+	}
 	@Override
 	public void addItem(String user_name, Item item) {
 		itemRepository.save(item);
@@ -160,11 +163,11 @@ public class AdminDaoImpl implements AdminDao {
 	public void deleteCategory(int categoryId) {
 		Category category = categoryRepository.getOne(categoryId);
 			List<SubCategory> subCategories = category.getSubCategories();
-			
-			for(SubCategory subCategory_item: subCategories) {
-				subCategoryRepository.delete(subCategory_item);
+			if(subCategories!=null) {
+				for(SubCategory subCategory_item: subCategories) {
+					subCategoryRepository.delete(subCategory_item);
+				}
 			}
-		
 		categoryRepository.delete(category);
 
 		
@@ -173,11 +176,13 @@ public class AdminDaoImpl implements AdminDao {
 	@Override
 	public void deleteSubCategory(int subCategoryId ) {
 		SubCategory subCategory = subCategoryRepository.getOne(subCategoryId);
-	
-			List<Item> items = subCategory.getItems();
+	    
+		List<Item> items = subCategory.getItems();
+		if(items!=null) {
 			for(Item items_list: items) {
 				itemRepository.delete(items_list);
 			}
+		}
 		
 		subCategoryRepository.delete(subCategory);
 	}
@@ -188,68 +193,6 @@ public class AdminDaoImpl implements AdminDao {
 		
 	}
 
-	@Override
-	public void uploadImage(Item img) {
-		//entityManager.persist(img);
-		
-	}
-	
-	@Override
-	public Item getImageDetails(String imageName) {
-//		String qStr = "SELECT item from Item item where item.picture=:imageName";
-//		TypedQuery<Item> query = entityManager.createQuery(qStr, Item.class);
-//		query.setParameter("imageName", imageName);
-//		Item img=query.getResultList().get(0);
-//		return img;
-		return null;
-	}
-
-	
-	@Override
-	public  byte[] compressBytes(byte[] data) {
-		Deflater deflater = new Deflater();
-		deflater.setInput(data);
-		deflater.finish();
-
-		ByteArrayOutputStream outputStream = new ByteArrayOutputStream(data.length);
-		byte[] buffer = new byte[1024];
-		while (!deflater.finished()) {
-			int count = deflater.deflate(buffer);
-			outputStream.write(buffer, 0, count);
-		}
-		try {
-			outputStream.close();
-		} catch (IOException e) {
-		}
-		System.out.println("Compressed Image Byte Size - " + outputStream.toByteArray().length);
-		System.out.println(outputStream.toByteArray().toString());
-		return outputStream.toByteArray();
-	}
-
-	// uncompress the image bytes before returning it to the angular application
-	@Override
-	public byte[] decompressBytes(byte[] data) {
-		Inflater inflater = new Inflater();
-		inflater.setInput(data);
-		ByteArrayOutputStream outputStream = new ByteArrayOutputStream(data.length);
-		byte[] buffer = new byte[1024];
-		try {
-			while (!inflater.finished()) {
-				int count = inflater.inflate(buffer);
-				outputStream.write(buffer, 0, count);
-			}
-			outputStream.close();
-		} catch (IOException ioe) {
-		} catch (DataFormatException e) {
-		}
-		return outputStream.toByteArray();
-	}
-
-	@Override
-	public int getRecentItemId() {
-		return itemRepository.getMaxOfItemId();
-		
-	}
 
 	
 	
@@ -259,3 +202,93 @@ public class AdminDaoImpl implements AdminDao {
 
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//
+//
+//@Override
+//public void uploadImage(Item img) {
+//	//entityManager.persist(img);
+//	
+//}
+//
+//@Override
+//public Item getImageDetails(String imageName) {
+////	String qStr = "SELECT item from Item item where item.picture=:imageName";
+////	TypedQuery<Item> query = entityManager.createQuery(qStr, Item.class);
+////	query.setParameter("imageName", imageName);
+////	Item img=query.getResultList().get(0);
+////	return img;
+//	return null;
+//}
+//
+//
+//@Override
+//public  byte[] compressBytes(byte[] data) {
+//	Deflater deflater = new Deflater();
+//	deflater.setInput(data);
+//	deflater.finish();
+//
+//	ByteArrayOutputStream outputStream = new ByteArrayOutputStream(data.length);
+//	byte[] buffer = new byte[1024];
+//	while (!deflater.finished()) {
+//		int count = deflater.deflate(buffer);
+//		outputStream.write(buffer, 0, count);
+//	}
+//	try {
+//		outputStream.close();
+//	} catch (IOException e) {
+//	}
+//	System.out.println("Compressed Image Byte Size - " + outputStream.toByteArray().length);
+//	System.out.println(outputStream.toByteArray().toString());
+//	return outputStream.toByteArray();
+//}
+//
+//// uncompress the image bytes before returning it to the angular application
+//@Override
+//public byte[] decompressBytes(byte[] data) {
+//	Inflater inflater = new Inflater();
+//	inflater.setInput(data);
+//	ByteArrayOutputStream outputStream = new ByteArrayOutputStream(data.length);
+//	byte[] buffer = new byte[1024];
+//	try {
+//		while (!inflater.finished()) {
+//			int count = inflater.inflate(buffer);
+//			outputStream.write(buffer, 0, count);
+//		}
+//		outputStream.close();
+//	} catch (IOException ioe) {
+//	} catch (DataFormatException e) {
+//	}
+//	return outputStream.toByteArray();
+//}
+//
+
+

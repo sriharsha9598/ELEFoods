@@ -3,6 +3,9 @@ package com.capfood.elef;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.transaction.Transactional;
 
 import org.junit.jupiter.api.Test;
@@ -56,6 +59,11 @@ public class AdminApplicationTests {
 		return subCategory_details;
 	}
 	
+	
+	/*
+	 * check the addItem function
+	 */
+	
 	@Test
 	public void test1_addItem() 
 	{
@@ -63,6 +71,10 @@ public class AdminApplicationTests {
 		 assertEquals("Paneer Butter Masala", item.getItemName());
 		
 	}
+	
+	/*
+	 * check the add category function
+	 */
 	@Test
 	public void test2_addCategory() 
 	{
@@ -71,6 +83,10 @@ public class AdminApplicationTests {
 		
 	}
 	
+	
+	/*
+	 * check the add sub category function
+	 */
 	@Test
 	public void test3_addSubCategory() 
 	{
@@ -79,6 +95,9 @@ public class AdminApplicationTests {
 		
 	}
 	
+	/*
+	 * check the get Item function
+	 */
 	@Test
 	public void test4_getItem()
 	{
@@ -87,6 +106,9 @@ public class AdminApplicationTests {
 		assertEquals("Paneer Butter Masala",item_details.getItemName());
 	}
 	
+	/*
+	 * check the get category function
+	 */
 	@Test
 	public void test5_getCategory()
 	{
@@ -94,6 +116,10 @@ public class AdminApplicationTests {
 		Category category_details = adminService.getCategory(category.getCategoryId());
 		assertEquals("Desserts", category_details.getCategoryName());
 	}
+	
+	/*
+	 * check the sub category function
+	 */
 	
 	@Test
 	public void test6_getSubCategory()
@@ -103,6 +129,10 @@ public class AdminApplicationTests {
 		assertEquals("Ice creams", subCategory_details.getSubCategoryName());
 	}
 	
+	
+	/*
+	 * check the edit item function
+	 */	
 	@Test
 	public void test7_editItem()
 	{
@@ -113,6 +143,9 @@ public class AdminApplicationTests {
 		assertEquals(true, result);
 	}
 	
+	/*
+	 * check the edit category function
+	 */
 	@Test
 	public void test8_editCategory()
 	{
@@ -123,7 +156,9 @@ public class AdminApplicationTests {
 		assertEquals(true, result);
 	}
 	
-	
+	/*
+	 * check the edit sub category function
+	 */
 	@Test
 	public void test9_editSubCategory()
 	{
@@ -134,6 +169,9 @@ public class AdminApplicationTests {
 		assertEquals(true, result);
 	}
 	
+	/*
+	 * check the delete item function
+	 */
 	@Test
 	public void test10_deleteItem()
 	{
@@ -142,8 +180,33 @@ public class AdminApplicationTests {
 		assertEquals(true, result);
 	}
 	
+	/* 
+	 * check the delete category function
+	 */
 	@Test
-	public void test11_NotanAdmin() {
+	public void test11_deleteCategory()
+	{
+		Category category = addCategory();
+		boolean result = adminService.deleteCategory(category.getCategoryId());
+		assertEquals(true, result);
+	}
+	
+	/*
+	 * check the delete sub category function
+	 */
+	@Test
+	public void test12_deleteSubCategory()
+	{
+		SubCategory subCategory = addSubCategory();
+		boolean result = adminService.deleteSubCategory(subCategory.getSubCategoryId());
+		assertEquals(true, result);
+	}
+	
+	/*
+	 * check the not an admin exception
+	 */
+	@Test
+	public void test13_NotanAdmin() {
 		Item item = new Item();
 		item.setItemName("Paneer Butter Masala");
 		item.setItemDescription("Rich & Creamy");
@@ -155,5 +218,10 @@ public class AdminApplicationTests {
 	    assertThrows(NotAnAdminException.class, ()->{
 	    	Item item_details = adminService.addItem("aar@gmail.com", 5004, item);
 	    });
+	    
+	    
 	}
+	
+	
+	
 }

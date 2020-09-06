@@ -8,9 +8,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -35,6 +37,7 @@ public class CustomerController {
     
 	@Autowired
 	CustomerService service;
+	
 	
 	
 	/* Method:getABranchItems
@@ -148,8 +151,8 @@ public class CustomerController {
 	 * Description: Called from customer account page to delete an address from the list of addresses saved
 	 * @param Address: address 
 	 * @return boolean: a boolean is returned to notify whether the address is deleted or not
-	*/
-	@GetMapping("/deleteAnAddress/{addressId}")
+	*/	
+	@DeleteMapping("/deleteAnAddress/{addressId}")
 	public ResponseEntity<Boolean> deleteAnAddress(@PathVariable int addressId)
 	{
 		logger.trace("Requested to delete an existing address");
@@ -157,7 +160,6 @@ public class CustomerController {
 		logger.trace("Completed request to delete an existing address");
 		return ResponseEntity.ok(returnedValue);
 	}
-	
 	
 	
 	/* Method:getAnUserOrders
@@ -179,14 +181,14 @@ public class CustomerController {
 	
 	
 	/* Method:placeANewOrder
-	 * Type: GetMapping
+	 * Type: PostMapping
 	 * Description: Called from customer placeOrder page to place a new order
 	 * @param String: emailId
 	 * @param int:branchId
 	 * @param int:addressId
 	 * @return boolean: a boolean is returned to notify whether the order is placed or not
 	*/
-	@GetMapping("/placeANewOrder/{emailId}/{branchId}/{addressId}")
+	@PostMapping("/placeANewOrder/{emailId}/{branchId}/{addressId}")
 	public ResponseEntity<Boolean> placeANewOrder(@PathVariable String emailId,@PathVariable int branchId,@PathVariable int addressId) throws ResourceNotFoundException,OutOfLocationRangeException,OrderContainsInactiveItemsException
 	{
 		logger.trace("Requested to place a new order");
@@ -196,7 +198,8 @@ public class CustomerController {
 	}
 	
 
-	/* Method:trackAnOrder
+	
+	/* Method: trackAnOrder
 	 * Type: GetMapping
 	 * Description: Called from customer account page to get the status of an order placed
 	 * @param int: orderId
@@ -213,14 +216,15 @@ public class CustomerController {
 	}
 	
 	
+	
 	/* Method:addAnItemToCarryBox
-	 * Type: GetMapping
+	 * Type: PostMapping
 	 * Description: Called from items page to add a desired item to carry box before buying
 	 * @param String:emailId
 	 * @param int: itemId
 	 * @return boolean: a boolean is returned to notify whether the item is added to carry box or not
 	*/
-	@GetMapping("addAnItemToCarryBox/{emailId}/{itemId}")
+	@PostMapping("addAnItemToCarryBox/{emailId}/{itemId}")
 	public ResponseEntity<Boolean> addItemToCarryBox(@PathVariable String emailId,@PathVariable int itemId)
 	{
 		logger.trace("Requested to add an item to carry box");
@@ -230,14 +234,15 @@ public class CustomerController {
 	}
 
 	
+	
 	/* Method:deleteACarryBoxItem
-	 * Type: GetMapping
+	 * Type: DeleteMapping
 	 * Description: Called from Carry Box page to delete a item from carry box when not needed
 	 * @param String:emailId
 	 * @param int: itemId
 	 * @return boolean: a boolean is returned to notify whether the item is deleted from carry box or not
 	*/	
-	@GetMapping("/deleteACarryBoxItem/{emailId}/{itemId}")
+	@DeleteMapping("/deleteACarryBoxItem/{emailId}/{itemId}")
 	public ResponseEntity<Boolean> deleteACarryBoxItem(@PathVariable String emailId,@PathVariable int itemId)
 	{
 		logger.trace("Requested to delete an item from carry box");
@@ -248,15 +253,16 @@ public class CustomerController {
 	}
 	
 	
+	
 	/* Method:updateACarryBoxItem
-	 * Type: GetMapping
+	 * Type: PutMapping
 	 * Description: Called from Carry Box page to update the quantity of an item in carry box
 	 * @param String:emailId
 	 * @param int: itemId
 	 * @param int: quantity
 	 * @return boolean: a boolean is returned to notify whether an item in the carry box is updated or not
 	*/
-	@GetMapping("/updateACarryBoxItem/{emailId}/{itemId}/{quantity}")
+	@PutMapping("/updateACarryBoxItem/{emailId}/{itemId}/{quantity}")
 	public ResponseEntity<Boolean> updateACarryBoxItem(@PathVariable String emailId,@PathVariable int itemId,@PathVariable int quantity)
 	{
 		logger.trace("Requested to get update an item in carry box");
@@ -264,6 +270,7 @@ public class CustomerController {
 		logger.trace("Completed request to get update an item in carry box");
 		return ResponseEntity.ok(returnedValue);
 	}
+	
 	
 	
 	/* Method:searchItems

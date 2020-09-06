@@ -10,6 +10,8 @@ import java.util.Set;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 import com.capfood.elef.dao.CustomerDao;
@@ -31,6 +33,17 @@ public class CustomerServiceImpl implements CustomerService {
 
 	@Autowired
 	CustomerDao dao;
+	
+	SimpleMailMessage mail = new SimpleMailMessage();
+	private JavaMailSender javaMailSender;
+//	defining and initializing the javaMailSender variable
+
+	@Autowired
+	public CustomerServiceImpl(JavaMailSender javaMailSender) {
+		this.javaMailSender = javaMailSender;
+	}
+	
+	
 	
 	@Override
 	public List<Item> getABranchItems(int branchId) throws ResourceNotFoundException{
@@ -161,7 +174,8 @@ public class CustomerServiceImpl implements CustomerService {
 		    Order order=new Order();
 	    	order.setBranch_order(branch);
 	    	order.setCustomer(user);
-	    	order.setOrderId(dao.generateOrderId());
+	    	int orderId=dao.generateOrderId();
+	    	order.setOrderId(orderId);
 	    	order.setAddress(address);
 	    	order.setOrderDate(LocalDate.now());
 	    	order.setOrderPrice(user.getCarryBox().getTotal_cost());
@@ -184,8 +198,23 @@ public class CustomerServiceImpl implements CustomerService {
 	    	}
 	    	
 	   //after placing the order successfully, carryBox's cost is set to zero
+	    	double totalCost=user.getCarryBox().getTotal_cost();
 	    	user.getCarryBox().setTotal_cost(0);
 		    dao.updateCarryBox(user.getCarryBox());
+		    
+		    
+	   //sending a mail about the placed order
+		    mail.setTo(emailId);
+			mail.setSubject("Thanks for ordering in ELEFoods");
+			mail.setText("Dear Customer,"
+						+"\n\n	Your Order Id: "+orderId
+						+"\n	Your order has been received on "+LocalDate.now()+" at "+LocalTime.now()
+						+" with a Bill Amount of Rs."+totalCost+"/-"
+						+"\n	You will be updated about your Delivery soon!!"
+						+"\n\n					Thanks for choosing ELEFoods....Have a Nice Day!!");
+			
+			javaMailSender.send(mail);
+
 			return true;	
 	}
 	

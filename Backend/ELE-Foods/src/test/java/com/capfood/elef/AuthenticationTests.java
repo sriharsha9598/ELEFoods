@@ -54,8 +54,7 @@ public class AuthenticationTests {
 		catch(Exception e) {
 			message1=e.getMessage();
 		}
-//		assertThat("Customer").isEqualTo(check);
-		assertEquals("Customer", check);
+		assertThat("Customer").isEqualTo(check);
 		//------------------------------------------------//
 		try {
 			check=service.userLogin(account.getEmailId(),"Sw@ti1245");
@@ -63,8 +62,8 @@ public class AuthenticationTests {
 		catch(Exception e) {
 			message1=e.getMessage();
 		}
-		assertEquals("Invalid username or password",message1);
-
+		assertThat("Invalid username or password").isEqualTo(message1);
+		
 	}
 
 

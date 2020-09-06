@@ -186,6 +186,10 @@ public class CustomerTests {
 		
 	//As all the conditions are satisfied, Order should be placed and return true
 		assertEquals(true,service.placeANewOrder("aar@gmail.com", 2001, 3007));
+		
+		
+//		service.addItemToCarryBox("sriharsha.p158@gmail.com", 2001);
+//		assertEquals(true,service.placeANewOrder("sriharsha.p158@gmail.com", 2001, 3008));
 			
 	}
 	
