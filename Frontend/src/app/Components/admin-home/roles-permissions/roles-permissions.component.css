@@ -1,0 +1,21 @@
+.wrapper{
+    width:83vw;
+    border: 1px solid black;
+    box-sizing: border-box;
+    padding:1rem;
+    
+}
+.title{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.heading{
+    color: #ff971d;
+    font-family: Julius Sans One;
+    font-weight:  bolder;
+    text-shadow: red 1px 0 2px; 
+    text-decoration: underline;
+    text-decoration-color:crimson;
+  
+}

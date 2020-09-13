@@ -1,0 +1,61 @@
+<div class="wrapper">
+    <div class="title"><h3 class="heading">Categories</h3><span></span></div>
+    <div class="search"><input type="text"  id="search" placeholder="enter your search text"  [(ngModel)]="searchText">
+      <i style="color: coral;font-size: larger;position: relative;left:-2rem;" class="fa fa-search"></i></div>
+    <div *ngIf="child_records_found" class="error">
+      <p class="text-danger">Sorry!!! This category contains items linked to it.</p>
+    </div>
+    <ng-container *ngIf = "(categories| searchCategory: searchText) as result" >
+    <table class="table" >
+        <thead>
+          <tr>
+            <th scope="col">CategoryId</th>
+            <th scope="col">Category Name</th>
+            <th scope="col">Action 1</th>
+            <th scope="col">Action 2</th>
+          </tr>
+
+        </thead>
+        <tbody>
+          <tr  *ngFor="let category of result">
+            <th scope="row">{{category.categoryId}}</th>
+            <td>{{category.categoryName}}</td>
+            <td><button (click)="editCategory(category.categoryId)">Edit</button></td>
+            <td><button (click)="deleteCategory(category.categoryId)">Delete</button></td>
+          </tr>
+        </tbody>
+   
+     
+      </table>
+      </ng-container>
+</div>
+
+
+<div class="wrapper edit" *ngIf="editable">
+  <div class="form">
+     
+    <form [formGroup] ="editCategoryForm">
+        <div><h3 class="heading">EDIT CATEGORY</h3><span></span></div>
+
+        <div class="categoryName">
+           
+            <input class="form-control" type="text" name="categoryName" formControlName="categoryName" id="input" placeholder="Enter your category name">
+            <div *ngIf="submitted && editCategoryForm.controls.categoryName.errors">
+                
+                <div *ngIf="editCategoryForm.controls.categoryName.errors.required">
+                    
+                    <i id="exclaim" class="fa fa-exclamation-circle"></i>
+                </div>
+                <div *ngIf="editCategoryForm.controls.categoryName.errors.pattern">
+                    <p id="pattern">category name should contain only aplhabets</p>
+                  
+                </div>
+            </div>
+            <div *ngIf="submitted && !editCategoryForm.controls.categoryName.errors">
+                <i id="check" class="fa fa-check-circle check-icon" ></i>
+            </div>
+        </div>
+     <button class="submit form-control" (click)="updateCategory()" style="background-color: green;color:white"> Edit Category</button>
+    </form>
+</div>
+</div>

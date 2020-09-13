@@ -1,0 +1,59 @@
+.wrapper{
+    width:84.3vw;
+    overflow: hidden;
+    box-sizing: border-box;
+    height:100vh;
+  
+   
+}
+.content{
+    padding-top: 16rem;
+    background-color: crimson;
+    padding-bottom:21rem;
+
+}
+.upper-svg{
+    background-color: crimson;
+}
+.left{
+    float:left;
+    text-align: center;
+    padding-left:4rem;
+    margin-top:3rem;
+}
+.right{
+ margin-right: 10rem;;
+    float: right;
+}
+.heading{
+    color: #ff971d;
+    font-family: Julius Sans One;
+    font-weight:  bolder;
+    margin-left: 10rem;
+    text-shadow: green 1px 0 2px; 
+    text-decoration: underline;
+    text-decoration-color:crimson;
+}
+p{
+    color:whitesmoke;
+    margin-left: 10rem;
+}
+img{
+    width:40rem;
+    height: 30rem;
+    margin-top: -5rem;
+    padding-right: 5rem;
+    padding-bottom: 1rem;
+    border-radius: 50%;
+    border-top:7px solid yellow;
+
+    border-right:white;
+   
+
+}
+img:hover{
+    border-top:none;
+    width:39rem;
+    box-shadow: 2px 2px 0px 2px slateblue;
+}
+

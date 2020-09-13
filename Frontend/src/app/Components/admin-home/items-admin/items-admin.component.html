@@ -1,0 +1,34 @@
+  
+<div class="wrapper">
+    <div class="title"><h3 class="heading">ITEMS</h3><span></span></div>
+    <div class="search"><input type="text"  id="search" placeholder="enter your search text" [(ngModel)]="searchtext">
+        <div><i style="color: coral;font-size: larger;position: relative;left:-2rem;" class="fa fa-search" ></i></div>
+        {{searchText}}
+    </div>
+    <br>
+    <div *ngIf="child_records_found" class="error">
+        <p class="text-danger">Sorry!!! This items contains subcategories linked to it.</p>
+      </div>
+  
+    <div class="content">
+            <div  *ngFor="let item of items | searchItems:searchtext">
+                <div class="child">
+                    <div class="itemName" >{{item.itemName}}</div>
+                    <div class="circle"><img  src="assets/Images/{{item.picture}}"></div>
+                    <div><span class="tag">{{item.itemPrice}}/-</span></div>
+                    
+                    <div (click)="edit(item.itemId)"><i  class="fa fa-pencil edit"></i></div>
+                    <div (click)="delete(item.itemId)"><i  class="fa fa-trash bin" ></i></div>
+                    <div>
+                        <div>
+                        <input (click)="updateActiveStatus(item.itemId)" *ngIf="item.active" class="activeStatus"
+                        id="{{item.itemId}}-active"  #active value="active">
+                        </div>
+                        <input (click)="updateActiveStatus(item.itemId)" *ngIf="!item.active" class="activeStatus"
+                        style="background-color: red;" 
+                        id="{{item.itemId}}-active" #active value="not-active">
+                    </div>
+                </div>  
+        </div>
+    </div>
+</div> 

@@ -1,0 +1,32 @@
+<div class="wrapper">
+   
+    <div class="form">
+     
+        <form [formGroup] ="addCategoryForm">
+            <div><h3 class="heading">ADD CATEGORY</h3><span></span></div>
+
+            <div class="categoryName">
+               <label>Category Name</label>
+                <input class="form-control" type="text" name="categoryName" formControlName="categoryName" id="input" placeholder="Enter your category name">
+                <div *ngIf="submitted && addCategoryForm.controls.categoryName.errors">
+                    
+                    <div *ngIf="addCategoryForm.controls.categoryName.errors.required">
+                        
+                        <i id="exclaim" class="fa fa-exclamation-circle"></i>
+                    </div>
+                    <div *ngIf="addCategoryForm.controls.categoryName.errors.pattern">
+                        <p id="pattern">category name should contain only aplhabets</p>
+                      
+                    </div>
+                </div>
+                <div *ngIf="submitted && !addCategoryForm.controls.categoryName.errors">
+                    <i id="check" class="fa fa-check-circle check-icon" ></i>
+                </div>
+            </div>
+         <button class="submit form-control" (click)="addCategory()" style="background-color: green;color:white"> Add Category</button>
+         <div *ngIf="added" class="text-success">
+            Category added successfully!!
+    </div>
+        </form>
+    </div>
+</div>
