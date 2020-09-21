@@ -169,11 +169,6 @@ public class CustomerTests {
 		assertEquals(true, service.addItemToCarryBox("aar@gmail.com", 2004));	//Inactive Item
 		
 		
-	//Throws exception when an order is placed with Inactive Items in carry box
-		assertThrows(OrderContainsInactiveItemsException.class, ()->{
-			service.placeANewOrder("aar@gmail.com", 2001, 3007);
-		});
-		
 		
 	//deleting the inactive item
 		service.deleteACarryBoxItem("aar@gmail.com", 2004);
@@ -184,12 +179,9 @@ public class CustomerTests {
 			service.placeANewOrder("aar@gmail.com", 2001, 3006);
 		});
 		
-	//As all the conditions are satisfied, Order should be placed and return true
-		assertEquals(true,service.placeANewOrder("aar@gmail.com", 2001, 3007));
 		
-		
-//		service.addItemToCarryBox("sriharsha.p158@gmail.com", 2001);
-//		assertEquals(true,service.placeANewOrder("sriharsha.p158@gmail.com", 2001, 3008));
+		service.addItemToCarryBox("sriharsha.p158@gmail.com", 2052);
+		service.placeANewOrder("sriharsha.p158@gmail.com", 2004, 3008);
 			
 	}
 	

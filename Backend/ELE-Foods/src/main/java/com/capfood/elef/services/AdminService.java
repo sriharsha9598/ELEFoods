@@ -1,9 +1,9 @@
 package com.capfood.elef.services;
 
-import java.io.IOException;
+
 import java.util.List;
 
-import org.springframework.web.multipart.MultipartFile;
+
 
 import com.capfood.elef.entities.Category;
 import com.capfood.elef.entities.Item;
@@ -24,7 +24,7 @@ public interface AdminService {
 
 	SubCategory addSubCategory(int category, SubCategory subCategory);
 
-	boolean editCategory(int branchId, Category category);
+	boolean editCategory(String adminId, Category category);
 
 	boolean deleteCategory(int categoryId);
 
@@ -34,7 +34,7 @@ public interface AdminService {
 
 	boolean deleteItem(int itemId);
 
-	boolean editSubCategory(int categoryId, SubCategory subCategory);
+	boolean editSubCategory( SubCategory subCategory);
 
 	Item getItem(int itemId);
 	
@@ -42,7 +42,18 @@ public interface AdminService {
 
 	void updateOrderStatus(int orderId, String orderStatus);
 
-	List<Item> getAllSearchItems(int adminId, String searchText);
+	List<Item> getAllSearchItems(String adminId, String searchText);
+
+	void sendEmail(String emailId);
+
+	List<SubCategory> getSubCategories(String adminId);
+
+	List<Category> getCategories(String username);
+
+	List<Item> getItems(String adminId);
+
+
+	boolean updateActiveStatus(int itemId, String status);
 
 }
 

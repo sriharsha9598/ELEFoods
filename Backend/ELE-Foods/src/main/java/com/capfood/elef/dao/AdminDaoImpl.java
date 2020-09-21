@@ -1,17 +1,13 @@
 package com.capfood.elef.dao;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.util.List;
-import java.util.zip.DataFormatException;
-import java.util.zip.Deflater;
-import java.util.zip.Inflater;
 
-import javax.persistence.EntityManager;
-import javax.persistence.TypedQuery;
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.kafka.KafkaProperties.Admin;
 import org.springframework.stereotype.Repository;
 import org.springframework.test.annotation.Rollback;
 
@@ -21,6 +17,7 @@ import com.capfood.elef.entities.Item;
 import com.capfood.elef.entities.Order;
 import com.capfood.elef.entities.SubCategory;
 import com.capfood.elef.entities.User;
+import com.capfood.elef.exceptions.ChildRecordsFoundException;
 import com.capfood.elef.repository.BranchRepository;
 import com.capfood.elef.repository.CategoryRepository;
 import com.capfood.elef.repository.ItemRepository;
@@ -51,6 +48,8 @@ public class AdminDaoImpl implements AdminDao {
 	
 	@Autowired
 	private UserRepository userRepository;
+	
+	
 	
 	@Override
 	public int generateItemId() {
@@ -139,17 +138,15 @@ public class AdminDaoImpl implements AdminDao {
 	}
 
 	@Override
-	public void editCategory(int branchId, Category category) {
-		Branch branch = branchRepository.getOne(branchId) ;
-		category.setBranch(branch);
+	public void editCategory(String adminId, Category category) {
+		User user = userRepository.getOne(adminId) ;
+		category.setBranch(user.getBranch());
 		categoryRepository.save(category);
 		
 	}
 
 	@Override
-	public void editSubCategory(int categoryId, SubCategory subCategory) {
-		Category category = categoryRepository.getOne(categoryId);
-		subCategory.setCategory(category);
+	public void editSubCategory( SubCategory subCategory) {
 		subCategoryRepository.save(subCategory);
 		
 	}
@@ -161,14 +158,15 @@ public class AdminDaoImpl implements AdminDao {
 	
 	@Override
 	public void deleteCategory(int categoryId) {
+		System.err.println("dao");
 		Category category = categoryRepository.getOne(categoryId);
-			List<SubCategory> subCategories = category.getSubCategories();
-			if(subCategories!=null) {
-				for(SubCategory subCategory_item: subCategories) {
-					subCategoryRepository.delete(subCategory_item);
-				}
-			}
-		categoryRepository.delete(category);
+		if(category.getSubCategories().size()==0) {
+		    categoryRepository.delete(category);
+			
+		}
+		else {
+			throw new ChildRecordsFoundException("child records found");
+		}
 
 		
 	}
@@ -176,27 +174,53 @@ public class AdminDaoImpl implements AdminDao {
 	@Override
 	public void deleteSubCategory(int subCategoryId ) {
 		SubCategory subCategory = subCategoryRepository.getOne(subCategoryId);
-	    
-		List<Item> items = subCategory.getItems();
-		if(items!=null) {
-			for(Item items_list: items) {
-				itemRepository.delete(items_list);
-			}
+		if( subCategory.getItems().size()==0) {
+			subCategoryRepository.delete(subCategory);
 		}
-		
-		subCategoryRepository.delete(subCategory);
+		else {
+			 throw new ChildRecordsFoundException("child records found");
+		}
+						
 	}
 	
 	@Override
 	public void deleteItem(int itemId ) {
-		itemRepository.delete(itemRepository.getOne(itemId));
-		
+		Item item = itemRepository.getOne(itemId);
+
+		itemRepository.delete(item);
+	
 	}
 
-
+	@Override
+	public List<SubCategory> getSubCategories() {
 	
-	
+		List<SubCategory> sub_categories = subCategoryRepository.findAll();
 		
+		return sub_categories;
+	
+	}
+
+    
+	@Override
+	public List<Category> getCategories(String username) {
+		
+		List<Category> categories = categoryRepository.findAll();
+		
+		return categories;
+	}
+
+	@Override
+	public List<Item> getItems(String adminId) {
+	    List<Item> items = itemRepository.findAll();
+		return items;
+	}
+
+	@Override
+	public void updateActiveStatus(Item item) {
+		itemRepository.save(item);
+		System.err.println(item.isActive());
+	
+	}
 	
 
 

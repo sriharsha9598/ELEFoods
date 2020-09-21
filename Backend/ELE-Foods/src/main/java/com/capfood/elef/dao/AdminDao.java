@@ -25,9 +25,9 @@ public interface AdminDao {
 
 	void addSubCategory(SubCategory subCategory);
 
-	void editCategory(int branchId, Category category);
+	void editCategory(String adminId, Category category);
 
-	void editSubCategory(int categoryId, SubCategory Subcategory);
+	void editSubCategory( SubCategory Subcategory);
 
 	void deleteCategory(int subCategoryId);
 
@@ -36,9 +36,6 @@ public interface AdminDao {
 	void editItem(Item item);
 
 	void deleteItem(int itemId);
-
-
-
 	
 	User getUserDetails(String userName);
 
@@ -51,6 +48,14 @@ public interface AdminDao {
 	List<Order> getOrders(int orderId);
 
 	Branch getBranch(int branchId);
+
+	List<SubCategory> getSubCategories();
+
+	List<Category> getCategories(String username);
+
+	List<Item> getItems(String adminId);
+
+	void updateActiveStatus(Item item);
 
 
 

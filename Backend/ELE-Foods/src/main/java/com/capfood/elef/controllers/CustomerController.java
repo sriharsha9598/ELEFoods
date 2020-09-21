@@ -18,11 +18,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.capfood.elef.entities.Address;
+import com.capfood.elef.entities.BranchDto;
 import com.capfood.elef.entities.CarryBox;
 import com.capfood.elef.entities.Category;
 import com.capfood.elef.entities.Item;
 import com.capfood.elef.entities.Order;
 import com.capfood.elef.entities.SubCategory;
+import com.capfood.elef.entities.User;
 import com.capfood.elef.exceptions.OrderContainsInactiveItemsException;
 import com.capfood.elef.exceptions.OutOfLocationRangeException;
 import com.capfood.elef.exceptions.ResourceNotFoundException;
@@ -146,6 +148,25 @@ public class CustomerController {
 	
 	
 	
+	
+	/* Method:updateAnAddress
+	 * Type: PutMapping
+	 * Description: Called from customer account page to update an existing address in the list of addresses saved
+	 * @param Address: address 
+	 * @return boolean: a boolean is returned to notify whether the address is updated or not
+	 * @throws ResourceNotFoundException : It is raised when no data is found with the given request
+	*/
+	@PutMapping("/updateAnAddress/{emailId}")
+	public ResponseEntity<Boolean> updateAnAddress(@PathVariable String emailId, @RequestBody Address address) throws ResourceNotFoundException
+	{
+		logger.trace("Requested to update an existing address");	
+		boolean returnedValue=service.UpdateAnAddress(emailId,address);
+		logger.trace("Completed request to update an existing address");	
+		return ResponseEntity.ok(returnedValue);
+	}
+	
+	
+	
 	/* Method:deleteAnAddress
 	 * Type: DeleteMapping
 	 * Description: Called from customer account page to delete an address from the list of addresses saved
@@ -186,13 +207,13 @@ public class CustomerController {
 	 * @param String: emailId
 	 * @param int:branchId
 	 * @param int:addressId
-	 * @return boolean: a boolean is returned to notify whether the order is placed or not
+	 * @return int: orderId is returned
 	*/
 	@PostMapping("/placeANewOrder/{emailId}/{branchId}/{addressId}")
-	public ResponseEntity<Boolean> placeANewOrder(@PathVariable String emailId,@PathVariable int branchId,@PathVariable int addressId) throws ResourceNotFoundException,OutOfLocationRangeException,OrderContainsInactiveItemsException
+	public ResponseEntity<Integer> placeANewOrder(@PathVariable String emailId,@PathVariable int branchId,@PathVariable int addressId) throws ResourceNotFoundException,OutOfLocationRangeException,OrderContainsInactiveItemsException
 	{
 		logger.trace("Requested to place a new order");
-		boolean returnedValue= service.placeANewOrder(emailId, branchId, addressId);
+		int returnedValue= service.placeANewOrder(emailId, branchId, addressId);
 		logger.trace("Completed request to place a new order");
 		return ResponseEntity.ok(returnedValue);
 	}
@@ -203,14 +224,14 @@ public class CustomerController {
 	 * Type: GetMapping
 	 * Description: Called from customer account page to get the status of an order placed
 	 * @param int: orderId
-	 * @return Order: an Order object placed from the user account
+	 * @return List<Order>: a list Order object with that order Id from the user account
 	 * @throws ResourceNotFoundException : It is raised when no data is found with the given request
 	*/
 	@GetMapping("/trackAnOrder/{orderId}")
-	public ResponseEntity<String> trackAnOrder(@PathVariable int orderId) throws ResourceNotFoundException
+	public ResponseEntity<List<Order>> trackAnOrder(@PathVariable int orderId) throws ResourceNotFoundException
 	{
 		logger.trace("Requested to get the status of an order");
-		String returnedValue= service.trackAnOrder(orderId);
+		List<Order> returnedValue= service.trackAnOrder(orderId);
 		logger.trace("Completed request to get the status of an order");
 		return ResponseEntity.ok(returnedValue);
 	}
@@ -224,8 +245,8 @@ public class CustomerController {
 	 * @param int: itemId
 	 * @return boolean: a boolean is returned to notify whether the item is added to carry box or not
 	*/
-	@PostMapping("addAnItemToCarryBox/{emailId}/{itemId}")
-	public ResponseEntity<Boolean> addItemToCarryBox(@PathVariable String emailId,@PathVariable int itemId)
+	@PostMapping("addAnItemToCarryBox/{emailId}")
+	public ResponseEntity<Boolean> addItemToCarryBox(@PathVariable String emailId,@RequestBody int itemId)
 	{
 		logger.trace("Requested to add an item to carry box");
 		boolean returnedValue= service.addItemToCarryBox(emailId, itemId);
@@ -251,6 +272,24 @@ public class CustomerController {
 		return ResponseEntity.ok(returnedValue);
 
 	}
+
+	
+	
+	/* Method:clearCarryBox
+	 * Type: DeleteMapping
+	 * Description: Called from Carry Box page to delete all the items in carry box when not needed
+	 * @param String:emailId
+	 * @return boolean: a boolean is returned to notify whether the items are deleted from carry box or not
+	*/	
+	@DeleteMapping("/clearACarryBox/{emailId}")
+	public ResponseEntity<Boolean> clearACarryBox(@PathVariable String emailId)
+	{
+		logger.trace("Requested to clear the carry box");
+		boolean returnedValue= service.clearACarryBox(emailId);
+		logger.trace("Completed request to delete clear the carry box");
+		return ResponseEntity.ok(returnedValue);
+
+	}
 	
 	
 	
@@ -262,8 +301,8 @@ public class CustomerController {
 	 * @param int: quantity
 	 * @return boolean: a boolean is returned to notify whether an item in the carry box is updated or not
 	*/
-	@PutMapping("/updateACarryBoxItem/{emailId}/{itemId}/{quantity}")
-	public ResponseEntity<Boolean> updateACarryBoxItem(@PathVariable String emailId,@PathVariable int itemId,@PathVariable int quantity)
+	@PutMapping("/updateACarryBoxItem/{emailId}/{itemId}")
+	public ResponseEntity<Boolean> updateACarryBoxItem(@PathVariable String emailId,@PathVariable int itemId,@RequestBody int quantity)
 	{
 		logger.trace("Requested to get update an item in carry box");
 		boolean returnedValue= service.updateACarryBoxItem(emailId,itemId,quantity);
@@ -289,5 +328,34 @@ public class CustomerController {
 		return ResponseEntity.ok(items);
 	}
 	
+	
+	/* Method:getAnUSerDetails
+	 * Type: GetMapping
+	 * Description: Called from my account page to retrieve all the details of an user
+	 * @param String: emailId
+	 * @return User: a user object will be returned with all details
+	*/
+	@GetMapping("/getAnUserDetails/{emailId}")
+	public ResponseEntity<User> getAnUserDetails(@PathVariable String emailId)
+	{
+		logger.trace("Requested to get user details");
+		User user= service.getAnUserDetails(emailId);
+		logger.trace("Completed request to get user details");
+		return ResponseEntity.ok(user);
+	}
+	
+	
+	/* Method:getAllBranches
+	 * Type: GetMapping
+	 * Description: Called from home page to retrieve the list of branches
+	 * @return List<BranchDto>: a list of branch dto objects will be returned with all details
+	*/
+	@GetMapping("/getAllBranches")
+	public ResponseEntity<List<BranchDto>> getAllBranches(){
+		logger.trace("Requested to get all branches");
+		List<BranchDto> branches= service.getAllBranches();
+		logger.trace("Completed request to get all branches");
+		return ResponseEntity.ok(branches);
+	}
 	
 }

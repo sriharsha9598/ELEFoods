@@ -1,23 +1,32 @@
 package com.capfood.elef.services;
 
-import java.io.IOException;
+
+
+
+
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.transaction.Transactional;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
+
 
 import com.capfood.elef.dao.AdminDao;
-import com.capfood.elef.entities.Branch;
+
 import com.capfood.elef.entities.Category;
 import com.capfood.elef.entities.Item;
 import com.capfood.elef.entities.Order;
 import com.capfood.elef.entities.SubCategory;
 import com.capfood.elef.entities.User;
+import com.capfood.elef.exceptions.CategoryNameAlreadyExistsException;
+import com.capfood.elef.exceptions.ItemNameAlreadyExistsException;
 import com.capfood.elef.exceptions.NotAnAdminException;
+import com.capfood.elef.exceptions.SubCategoryNameAlreadyExistsException;
 
 
 @Service
@@ -27,26 +36,46 @@ public class AdminServiceImpl implements AdminService {
 	@Autowired
 	AdminDao admin_dao;
 	
+	SimpleMailMessage mail = new SimpleMailMessage();
+	private JavaMailSender javaMailSender;
 
-
-
+	@Autowired
+	public AdminServiceImpl(JavaMailSender javaMailSender) {
+		this.javaMailSender = javaMailSender;
+	}
+	
 	@Override
 	public Item addItem(String user_name, int subCategory, Item item) {
 		User user = admin_dao.getUserDetails(user_name);
+		List<Item> items= user.getBranch().getItems();
+		
+		for(Item i:items) {
+			if(i.getItemName().equals(item.getItemName())) {
+					throw new ItemNameAlreadyExistsException("Item name already exists exception");
+			}
+		}
 		if(user.getRole().equals("Admin")) {
-			SubCategory sub_category = admin_dao.getSubCategory(subCategory);
-			item.setSubCategory(sub_category);
-		    item.setBranch(user.getBranch());
-		    item.setItemId(admin_dao.generateItemId());
-		    admin_dao.addItem(user_name, item);
+				
+				SubCategory sub_category = admin_dao.getSubCategory(subCategory);
+				item.setSubCategory(sub_category);
+				item.setPicture(String.valueOf(admin_dao.generateItemId()));
+				if(item.isActive()!=true || item.isActive()!=false)
+					item.setActive(true);
+				if(item.getItemDescription().equals(""))
+					item.setItemDescription("tasty");
+			    item.setBranch(user.getBranch());
+			    item.setItemId(admin_dao.generateItemId());
+			    admin_dao.addItem(user_name, item);
+			    	   
 		}
 		else {
-			throw new NotAnAdminException("Sorry..You are not allowed for adding an item");
+			throw new NotAnAdminException("Sorry..You are not allowed for adding item");
 		}
-	    return item;
-		
+			
+	
+		 return item;
+	
 	}
-//	
 
 	@Override
 	public User getUserDetails(String username) {
@@ -73,11 +102,21 @@ public class AdminServiceImpl implements AdminService {
 	
 	@Override
 	public Category addCategory(String userId, Category category) {
+		
 		User user = admin_dao.getUserDetails(userId);
-		if(user.getRole().equals("Admin")) {
-			category.setCategoryId(admin_dao.generateCategoryId());
-			category.setBranch(user.getBranch());
-			admin_dao.addCategory(category);
+		List<Category> categories = user.getBranch().getCategory();
+		System.err.println(categories.get(0));
+		for(Category c: categories) {
+			if(c.getCategoryName().equals(category.getCategoryName())) {
+				throw new CategoryNameAlreadyExistsException("Category Name Already Exists");
+			}
+			
+		}
+		if(user.getRole().equals("Admin")) {	
+				category.setCategoryId(admin_dao.generateCategoryId());
+				category.setBranch(user.getBranch());
+				admin_dao.addCategory(category);
+		
 		}
 		else {
 			throw new NotAnAdminException("Sorry..You are not allowed for adding an item");
@@ -91,11 +130,20 @@ public class AdminServiceImpl implements AdminService {
 	@Override
 	public SubCategory addSubCategory(int category, SubCategory subCategory) {
 		Category category_details = admin_dao.getCategory(category);
-		String s=category_details.getBranch().getAdmin().getCustomerName();
-		System.err.println(s);
+		List<SubCategory> subCategories = category_details.getSubCategories();
+		System.err.println(subCategories.get(0));
+		for(SubCategory c: subCategories) {
+			if(c.getSubCategoryName().equals(subCategory.getSubCategoryName())) {
+				throw new SubCategoryNameAlreadyExistsException("Sub-Category Name Already Exists");
+			}
+			
+		}
+		
+		
 		if(category_details.getBranch().getAdmin().getRole().equals("Admin")) {
-		    subCategory.setSubCategoryId(admin_dao.generateSubCategoryId());
-			subCategory.setCategory(category_details);
+			
+			    subCategory.setSubCategoryId(admin_dao.generateSubCategoryId());
+				subCategory.setCategory(category_details);
 			admin_dao.addSubCategory(subCategory);
 		}
 		else {
@@ -106,20 +154,21 @@ public class AdminServiceImpl implements AdminService {
 	}
 
 	@Override
-	public boolean editCategory(int branchId, Category category) {
-		admin_dao.editCategory(branchId, category);
+	public boolean editCategory(String emailId, Category category) {
+		admin_dao.editCategory(emailId, category);
 		return true;
 		
 	}
 	@Override
-	public boolean editSubCategory(int categoryId, SubCategory subCategory) {
+	public boolean editSubCategory( SubCategory subCategory) {
 		
-		admin_dao.editSubCategory(categoryId, subCategory);
+		admin_dao.editSubCategory( subCategory);
 		return true;
 	}
 
 	@Override
 	public boolean editItem(Item item) {
+		item.setPicture(String.valueOf(item.getItemId()));
 		admin_dao.editItem(item);
 		return true;
 	}
@@ -155,6 +204,7 @@ public class AdminServiceImpl implements AdminService {
 		for(int i=0;i<orders.size();i++) {
 			Order order=orders.get(i);
 			if(orderStatus.equals("Accepted")) {
+				
 				order.setOrderStatus("Accepted");
 				order.setStatusDescription("Your order has been accepted by the store and is being processed");
 			}
@@ -176,9 +226,9 @@ public class AdminServiceImpl implements AdminService {
 	}
 
 	@Override
-	public List<Item> getAllSearchItems(int branchId, String searchText) {
-		Branch branch = admin_dao.getBranch(branchId);
-		   List<Item> items = branch.getItems();
+	public List<Item> getAllSearchItems(String emailId, String searchText) {
+		User user = admin_dao.getUserDetails(emailId);
+		   List<Item> items = user.getBranch().getItems();
 		    List<Item> new_items= new ArrayList<>();
 		    for(Item i : items) {
 		    	String words[] = i.getItemName().split(" ");
@@ -199,37 +249,90 @@ public class AdminServiceImpl implements AdminService {
 		    
 	
 	}
+
+	@Override
+	public void sendEmail(String emailId) {
+		 mail.setTo(emailId);
+			mail.setSubject("Enjoy excited taste and food");
+			mail.setText("Dear Customer,"
+						+"\n\n	Thanks for being our valuable customer and for your continuous support "
+						+"\n There are many exciting offers to satisfy your hunger"
+						+" \n come and check it on our website"
+						+"\n\n Thanks for choosing ELEFoods....Have a Nice Day!!");
+			
+			javaMailSender.send(mail);
+		
+	}
+
+	@Override
+	public List<SubCategory> getSubCategories(String adminId) {
+		List<Category> categories=getCategories(adminId);
+		List<SubCategory> subCategories=new ArrayList<>();
+		for(int i=0;i<categories.size();i++) {
+			subCategories.addAll(categories.get(i).getSubCategories());
+		}
+		return subCategories;
+	}
+
+	
+
+	@Override
+	public List<Category> getCategories(String adminId) {
+		return admin_dao.getUserDetails(adminId).getBranch().getCategory();
+	}
+
+	@Override
+	public List<Item> getItems(String adminId) {
+		return admin_dao.getUserDetails(adminId).getBranch().getItems();
+//		return admin_dao.getItems(adminId);
+	}
+
+	@Override
+	public boolean updateActiveStatus(int itemId, String status) {
+		System.err.println("got input as "+status);
+		Item item = admin_dao.getItem(itemId);
+		if(status.equals("active")){
+			
+			item.setActive(false);
+		}
+		else if(status.equals("not-active")) {
+			item.setActive(true);
+		}
+		System.err.println("updated as "+item.isActive());
+		admin_dao.updateActiveStatus(item);
+		return item.isActive();
+	}
+	
+	
+	
 }
 
 
-//@Override
-//public void addItem(MultipartFile file, String user_name, int subCategory, Item item) throws IOException {
-//	User user = admin_dao.getUserDetails(user_name);
-//	SubCategory sub_category = admin_dao.getSubCategory(subCategory);
-//	item.setSubCategory(sub_category);
-//    item.setBranch(user.getBranch());
-//   // item.setPicture(file.getOriginalFilename());
-//    item.setPicByte(file.getBytes());
-//   // item.setPic_type(file.getContentType());
-//    item.setItemId(admin_dao.generateId());
-//    admin_dao.addItem(user_name, item);
-//	
-//}
 
-//
-//@Override
-//public Item getImageDetails(String imageName) {
-//	return admin_dao.getImageDetails(imageName);
-//}
-//
-//@Override
-//public void uploadImage(MultipartFile file) throws IOException  {
-//	//Item img = new Item(file.getOriginalFilename(),file.getBytes(), file.getContentType());
-//	//admin_dao.uploadImage(img);
-//	
-//}
-//
-//@Override
-//public int getRecentItemId() {
-//	return admin_dao.getRecentItemId();
-//}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -46,13 +46,13 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 	}
 
 	@Override
-	public List<Order> getOrderList(String emailId) {
+	public List<List<Order>> getOrderList(String emailId) {
 		logger.trace("Get Order List method is accessed at service layer");
 		return dao.getOrderList(emailId);
 	}
 
 	@Override
-	public List<Order> getActiveOrderList(String emailId) {
+	public  List<List<Order>> getActiveOrderList(String emailId) {
 		logger.trace(" Get Active Order List method is accessed at service layer");
 		return dao.getActiveOrderList(emailId);
 	}

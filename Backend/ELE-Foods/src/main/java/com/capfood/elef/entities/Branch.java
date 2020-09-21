@@ -12,6 +12,8 @@ import javax.validation.constraints.NotEmpty;
 
 import org.hibernate.validator.constraints.Length;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 
 @Entity
 @Table(name="ELEF_BRANCH")
@@ -24,8 +26,13 @@ public class Branch {
 	
 	@NotEmpty(message=" Branch Name should not be empty")
 	@Length(max=25)
-	@Column(name="BRANCHNAME")
-	private String branchName;
+	@Column(name="BRANCHREGION")
+	private String branchRegion;
+	
+	@NotEmpty(message=" City should not be empty")
+	@Length(max=25)
+	@Column(name="BRANCHCITY")
+	private String branchCity;
 	
 	@Length(max=10)
 	@NotEmpty(message="Name should not be empty")
@@ -50,12 +57,14 @@ public class Branch {
 	}
 
 	public Branch(int branchId,
-			@NotEmpty(message = " Branch Name should not be empty") @Length(max = 25) String branchName,
+			@NotEmpty(message = " Branch Name should not be empty") @Length(max = 25) String branchRegion,
+			@NotEmpty(message = " City should not be empty") @Length(max = 25) String branchCity,
 			@Length(max = 10) @NotEmpty(message = "Name should not be empty") String contactNumber, User admin,
 			List<Order> orders, List<Item> items, List<Category> category) {
 		super();
 		this.branchId = branchId;
-		this.branchName = branchName;
+		this.branchRegion = branchRegion;
+		this.branchCity = branchCity;
 		this.contactNumber = contactNumber;
 		this.admin = admin;
 		this.orders = orders;
@@ -71,12 +80,20 @@ public class Branch {
 		this.branchId = branchId;
 	}
 
-	public String getBranchName() {
-		return branchName;
+	public String getBranchRegion() {
+		return branchRegion;
 	}
 
-	public void setBranchName(String branchName) {
-		this.branchName = branchName;
+	public void setBranchRegion(String branchRegion) {
+		this.branchRegion = branchRegion;
+	}
+
+	public String getBranchCity() {
+		return branchCity;
+	}
+
+	public void setBranchCity(String branchCity) {
+		this.branchCity = branchCity;
 	}
 
 	public String getContactNumber() {
@@ -87,7 +104,6 @@ public class Branch {
 		this.contactNumber = contactNumber;
 	}
 
-	
 	public User getAdmin() {
 		return admin;
 	}
@@ -96,6 +112,7 @@ public class Branch {
 		this.admin = admin;
 	}
 
+	@JsonIgnore
 	public List<Order> getOrders() {
 		return orders;
 	}
@@ -121,5 +138,5 @@ public class Branch {
 	}
 
 
-   
+	
 }

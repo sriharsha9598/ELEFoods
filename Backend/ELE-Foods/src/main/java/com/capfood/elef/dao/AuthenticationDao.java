@@ -62,21 +62,14 @@ public interface AuthenticationDao {
 	/**
 	 * This method is used for getting the order list of placed orders 
 	 * @param emailId This is the first parameter to getOrderList method 
-	 * @return List<Order> This returns a list of orders placed from the database
+	 * @return  List<List<Order>> This returns a list of order lists placed from the database
 	 */
-	public List<Order> getOrderList(String emailId);
-//	
-//	/**
-//	 * This method is used for updating the order status
-//	 * @param orderId This is the first parameter to updateOrderStatus method 
-//	 * @return String This returns a  message after the user status is updated
-//	 */
-//	public String updateOrderStatus(int orderId,String orderStatus);
-//	
+	public List<List<Order>> getOrderList(String emailId);
+
 	/**
 	 * This method is used for getting the order list of accepted orders 
 	 * @param emailId This is the first parameter to getActiveOrderList method 
-	 * @return List<Order> This returns a list of orders accepted from the database
+	 * @return  List<List<Order>> This returns a list of order lists accepted from the database
 	 */
-	public List<Order> getActiveOrderList(String emailId);
+	public  List<List<Order>> getActiveOrderList(String emailId);
 }

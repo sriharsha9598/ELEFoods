@@ -165,7 +165,7 @@ public class Order {
 		this.statusDescription = statusDescription;
 	}
 
-	@JsonIgnore
+
 	public Branch getBranch_order() {
 		return branch_order;
 	}

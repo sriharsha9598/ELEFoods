@@ -1,8 +1,10 @@
 package com.capfood.elef.controllers;
 import java.io.IOException;
+
 import java.util.List;
 
 import javax.persistence.EntityManager;
+import javax.validation.Valid;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,9 +18,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.capfood.elef.entities.Category;
 import com.capfood.elef.entities.Item;
@@ -27,7 +27,8 @@ import com.capfood.elef.entities.User;
 import com.capfood.elef.services.AdminService;
 
 
-@CrossOrigin(origins="*")
+@CrossOrigin(origins="http://localhost:4200")
+//@CrossOrigin
 @RestController
 @RequestMapping("/admin")
 public class AdminController {
@@ -114,7 +115,7 @@ public class AdminController {
 	 * @throws IOException 
 	 */
 	@PostMapping("/addItem/{username}/{subCategory}")
-	public ResponseEntity<Item> addItem( @PathVariable String username, @PathVariable int subCategory, @RequestBody Item item)
+	public ResponseEntity<Item> addItem( @PathVariable String username, @PathVariable int subCategory, @Valid  @RequestBody Item item)
 	{
 		logger.trace("Requested to add a new Item");
 		Item item_details  = admin_service.addItem(username, subCategory, item);
@@ -122,22 +123,52 @@ public class AdminController {
 		return ResponseEntity.ok(item_details);
 		
 	}
-
 	
+
+	@GetMapping("/getSubCategories/{adminId}")
+	public ResponseEntity<List<SubCategory>> getSubCategories(@PathVariable String adminId)
+	{
+		logger.trace("Requested to add a new Item");
+		List<SubCategory> subCategory_details  = admin_service.getSubCategories(adminId);
+		logger.trace(" completed request to add a new item Details");
+		return ResponseEntity.ok( subCategory_details);
+		
+	}
+	
+	@GetMapping("/getItems/{adminId}")
+	public ResponseEntity<List<Item>> getItems(@PathVariable String adminId )
+	{
+		logger.trace("Requested to add a new Item");
+		List<Item> items  = admin_service.getItems(adminId);
+		logger.trace(" completed request to add a new item Details");
+		return ResponseEntity.ok( items);
+		
+	}
 	/**
 	 * Method Description : Admin will be able to add a new category according to admin id to which it belongs to.
 	 * @param admin       : Admin name to which the category belongs to. 
 	 * @param category    : Category object which is to be added
 	 * @return
 	 */
-	@PostMapping("/addCategory/{admin}/{subCategory}")
-	public ResponseEntity<Category> addCategory(@PathVariable String admin, @RequestBody Category category)
+	@PostMapping("/addCategory/{admin}")
+	public ResponseEntity<Category> addCategory(@PathVariable String admin, @Valid @RequestBody Category category)
 	{
 		logger.trace("Requested to add a new Category");
 		Category category_details = admin_service.addCategory(admin, category);
 		return ResponseEntity.ok(category_details);
 	}
-	
+
+	@GetMapping("/getCategories/{username}")
+	public ResponseEntity<List<Category>> getCategories(@PathVariable String username )
+	{
+		
+		
+		logger.trace("Requested to add a new Item");
+		List<Category> category_details  = admin_service.getCategories(username);
+		logger.trace(" completed request to add a new item Details");
+		return ResponseEntity.ok( category_details);
+		
+	}
 	
 	/**
 	 * Method Description : Admin will be able add a new sub category according to category id to which it belongs to.
@@ -146,7 +177,7 @@ public class AdminController {
 	 * @return
 	 */
 	@PostMapping("/addSubCategory/{category}")
-	public ResponseEntity<SubCategory> addSubCategory(@PathVariable int category, @RequestBody SubCategory subCategory)
+	public ResponseEntity<SubCategory> addSubCategory(@PathVariable int category,@Valid @RequestBody SubCategory subCategory)
 	{   
 		logger.trace("Requested to add a  Sub Category Details");
 		SubCategory subCategory_details = admin_service.addSubCategory(category, subCategory);
@@ -165,12 +196,12 @@ public class AdminController {
 	 * @return
 	 */
 
-	@PutMapping("/editCategory/{branchId}")
-	public ResponseEntity<Boolean> editCategory(@PathVariable int branchId, @RequestBody Category category) {
+	@PutMapping("/editCategory/{adminId}")
+	public ResponseEntity<Boolean> editCategory(@PathVariable String adminId,@Valid @RequestBody Category category) {
 		logger.trace("Requested to edit a Category Details");
-		boolean result = admin_service.editCategory(branchId, category);
+		boolean result = admin_service.editCategory(adminId, category);
 		logger.trace("Completed Request to edit category Details");
-		return ResponseEntity.ok(true);
+		return ResponseEntity.ok(result);
 	}
 	
 	/**
@@ -179,10 +210,10 @@ public class AdminController {
 	 * @param subCategory  : Sub Category object which is to updated
 	 * @return
 	 */
-	@PutMapping("/editSubCategory/{categoryId}")
-	public ResponseEntity<Boolean> editSubCategory(@PathVariable int categoryId, @RequestBody SubCategory subCategory) {
+	@PutMapping("/editSubCategory")
+	public ResponseEntity<Boolean> editSubCategory( @Valid @RequestBody SubCategory subCategory) {
 		logger.trace("Requested to edit  sub category Details");
-		boolean result = admin_service.editSubCategory(categoryId, subCategory);
+		boolean result = admin_service.editSubCategory( subCategory);
 		logger.trace("Completed Request to edit sub category Details");
 		return ResponseEntity.ok(result);
 	}
@@ -194,7 +225,7 @@ public class AdminController {
 	 * @return	
 	 */
 	@PutMapping("/editItem")
-	public ResponseEntity<Boolean> editItem(@RequestBody Item item) {
+	public ResponseEntity<Boolean> editItem(@RequestBody @Valid Item item) {
 		logger.trace("Requested to edit item Details");
 		boolean result = admin_service.editItem(item);
 		logger.trace("Completed Request to edit item Details");
@@ -250,12 +281,12 @@ public class AdminController {
 	 * @return
 	 */
 	@GetMapping("/updateOrderStatus/{orderId}/{orderStatus}")
-	public ResponseEntity<String> updateOrderStatus(@PathVariable int orderId, @PathVariable String orderStatus )
+	public ResponseEntity<Boolean> updateOrderStatus(@PathVariable int orderId, @PathVariable String orderStatus )
 	{
 		logger.trace("Requested to update order status");
 		admin_service.updateOrderStatus(orderId, orderStatus);
 		logger.trace("updated order status");
-		return ResponseEntity.ok("Order Status Updated");
+		return ResponseEntity.ok(true);
 	}
 	
 	/**
@@ -265,18 +296,28 @@ public class AdminController {
 	 * @return
 	 */
 	
-	@GetMapping("/getSearchItems/{branchId}/{searchText}")
-	public ResponseEntity<List<Item>> getAllSearchItems(@PathVariable int branchId, @PathVariable String searchText)
+	@GetMapping("/getSearchItems/{adminId}/{searchText}")
+	public ResponseEntity<List<Item>> getAllSearchItems(@PathVariable String adminId, @PathVariable String searchText)
 	{
-		List<Item> items = admin_service.getAllSearchItems(branchId, searchText);
+		List<Item> items = admin_service.getAllSearchItems(adminId, searchText);
 	    return  ResponseEntity.ok(items); 
 	}
 	
 	
 	
+   @GetMapping("/sendMail/{emailId}")
+   public void sendEmail(@PathVariable String emailId)
+   {
+	   admin_service.sendEmail(emailId);
+   }
 	
-
-
+   
+   @GetMapping("/updateActiveStatus/{itemId}/{status}")
+   public boolean updateActiveStatus(@PathVariable int itemId, @PathVariable String status) {
+	   System.err.println("status");
+	    boolean b= admin_service.updateActiveStatus(itemId, status);
+	   return b;
+   }
 }
 
 
@@ -294,38 +335,3 @@ public class AdminController {
 
 
 
-
-//@GetMapping("/getRecentItemId")
-//public ResponseEntity<Integer> getRecentItemId(){
-//	int itemId = admin_service.getRecentItemId();
-//	return ResponseEntity.ok(itemId);
-//}
-//
-//
-//@PostMapping("/upload")
-//public ResponseEntity<?> uploadImage(@RequestParam("imageFile") MultipartFile file) throws IOException {
-//	admin_service.uploadImage(file);
-//	return ResponseEntity.ok(true);
-//}
-//
-//
-//
-//public ResponseEntity<?> getImageDetails(String imageName) {
-//	admin_service.getImageDetails(imageName);
-//	return ResponseEntity.ok(true);
-//}
-
-
-
-
-
-
-//@PostMapping("/addItem/{username}/{subCategory}")
-//public ResponseEntity<?> addItem(@RequestParam("imageFile") MultipartFile file, @PathVariable String username, @PathVariable int subCategory, @RequestBody Item item) throws IOException
-//{
-//		
-//	admin_service.addItem(file, username, subCategory, item);
-//	
-//	return ResponseEntity.ok(true);
-//	
-//}

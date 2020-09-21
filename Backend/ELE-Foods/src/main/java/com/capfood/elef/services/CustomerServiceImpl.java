@@ -3,7 +3,8 @@ package com.capfood.elef.services;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.Collections;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
 import com.capfood.elef.dao.CustomerDao;
 import com.capfood.elef.entities.Address;
 import com.capfood.elef.entities.Branch;
+import com.capfood.elef.entities.BranchDto;
 import com.capfood.elef.entities.CarryBox;
 import com.capfood.elef.entities.Category;
 import com.capfood.elef.entities.Item;
@@ -69,6 +71,8 @@ public class CustomerServiceImpl implements CustomerService {
 	public List<SubCategory> getABranchSubCategories(int branchId) {
 		List<SubCategory> subCategories = new ArrayList<>();
 		List<Category> categories=getABranchCategories(branchId);
+		
+	//to get all the sub-categories from the existing categories
 		for(int i=0;i<categories.size();i++) {
 			subCategories.addAll(categories.get(i).getSubCategories());
 		}
@@ -110,6 +114,19 @@ public class CustomerServiceImpl implements CustomerService {
 			return false;
 		}
 	}
+	
+	@Override
+	public boolean UpdateAnAddress(String emailId,Address address) {
+		try {
+			User user=dao.getAnUserDetails(emailId);
+			address.setCustomer(user);
+			dao.updateAnAddress(address);
+			return true;
+		}
+		catch(Exception ex) {
+			return false;
+		}
+	}
 
 	@Override
 	public boolean deleteAnAddress(int addressId) {
@@ -126,7 +143,29 @@ public class CustomerServiceImpl implements CustomerService {
 	@Override
 	public List<Order> getAnUserOrders(String emailId) throws ResourceNotFoundException {
 		try {
-		return dao.getAnUserDetails(emailId).getMyOrders();
+			List<Order> allOrders=dao.getAnUserDetails(emailId).getMyOrders();
+			List<Integer> orderIds=new ArrayList<>();
+			List<Order> orders=new ArrayList<>();
+			
+			for(int i=0;i<allOrders.size();i++) {
+				if(!orderIds.contains(allOrders.get(i).getOrderId()))
+					orderIds.add(allOrders.get(i).getOrderId());
+			}
+			Collections.sort(orderIds);
+			Collections.reverse(orderIds);
+			for(int i=0;i<orderIds.size();i++) {
+				for(int j=0;j<allOrders.size();j++) {
+					if(orderIds.get(i)==allOrders.get(j).getOrderId()) {
+						orders.add(allOrders.get(j));
+						break;
+					}
+				}
+			}
+
+			
+			return orders;
+//			return dao.getAnUserDetails(emailId).getMyOrders();
+			
 		}
 		catch(Exception ex) {
 			throw new ResourceNotFoundException("No Orders found from your Account!!");
@@ -135,7 +174,7 @@ public class CustomerServiceImpl implements CustomerService {
 	}
 
 	@Override
-	public boolean placeANewOrder(String emailId,int branchId,int addressId)throws ResourceNotFoundException,OutOfLocationRangeException,OrderContainsInactiveItemsException {
+	public int placeANewOrder(String emailId,int branchId,int addressId)throws ResourceNotFoundException,OutOfLocationRangeException,OrderContainsInactiveItemsException {
 	
 			User user=new User();
 			user=dao.getAnUserDetails(emailId);
@@ -159,7 +198,7 @@ public class CustomerServiceImpl implements CustomerService {
 	//If the order's address is away from the branch's location, exception is raised
 			for(int i=0;i<user.getAddress().size();i++) {
 				if(user.getAddress().get(i).getAddressId()==addressId) {
-					if(!(user.getAddress().get(i).getCity().equalsIgnoreCase(branch.getBranchName()))){
+					if(!(user.getAddress().get(i).getCity().equalsIgnoreCase(branch.getBranchCity()))){
 						throw new OutOfLocationRangeException("Sorry, we could not deliver to this location!!");
 					}
 				}
@@ -192,16 +231,13 @@ public class CustomerServiceImpl implements CustomerService {
 		    	dao.placeAnOrder(order);
 	    	}
 	    	
-	   //after placing the order successfully, clearing the carry box
-	    	while(user.getCarryBox().getItemlist().size()!=0) {
-	    		user.getCarryBox().removeItem(user.getCarryBox().getItemlist().get(0));
-	    	}
-	    	
-	   //after placing the order successfully, carryBox's cost is set to zero
 	    	double totalCost=user.getCarryBox().getTotal_cost();
-	    	user.getCarryBox().setTotal_cost(0);
-		    dao.updateCarryBox(user.getCarryBox());
-		    
+	        
+	   //after placing the order successfully, clearing the carry box
+	   //after placing the order successfully, carryBox's cost is set to zero
+	 	    clearACarryBox(emailId);
+	    	
+	    
 		    
 	   //sending a mail about the placed order
 		    mail.setTo(emailId);
@@ -215,12 +251,22 @@ public class CustomerServiceImpl implements CustomerService {
 			
 			javaMailSender.send(mail);
 
-			return true;	
+			return orderId;	
 	}
 	
+	@Override
+	public boolean clearACarryBox(String emailId) {
+		User user=dao.getAnUserDetails(emailId);
+		while(user.getCarryBox().getItemlist().size()!=0) {
+    		user.getCarryBox().removeItem(user.getCarryBox().getItemlist().get(0));
+    	}	
+		user.getCarryBox().setTotal_cost(0);
+	    dao.updateCarryBox(user.getCarryBox());
+    	return true;
+	}
 	
 	@Override
-	public String trackAnOrder(int orderId) throws ResourceNotFoundException {
+	public List<Order> trackAnOrder(int orderId) throws ResourceNotFoundException {
 		try {
 		return dao.getAnOrderDetails(orderId);
 		}
@@ -304,7 +350,7 @@ public class CustomerServiceImpl implements CustomerService {
 	@Override
 	public Set<Item> searchItems(int branchId,String text) {
 		CharSequence searchText=text.toLowerCase();
-		Set<Item> items = new HashSet<>();
+		Set<Item> items = new LinkedHashSet<>();
 		List<SubCategory> subCategories=getABranchSubCategories(branchId);
 		
 		Branch branch=dao.getABranchDetails(branchId);
@@ -325,6 +371,35 @@ public class CustomerServiceImpl implements CustomerService {
 			}
 		}
 		return items;
+	}
+
+
+
+	@Override
+	public User getAnUserDetails(String emailId)throws ResourceNotFoundException {
+		try {
+		User user=dao.getAnUserDetails(emailId);
+		return user;
+		}
+		catch(Exception ex) {
+			throw new ResourceNotFoundException("No user Found");
+		}
+	}
+
+
+
+	@Override
+	public List<BranchDto> getAllBranches() {
+		List<Branch> allBranches=dao.getAllBranches();
+		List<BranchDto> branches=new ArrayList<>();
+		for(int i=0;i<allBranches.size();i++) {
+			BranchDto temp=new BranchDto();
+			temp.setBranchId(allBranches.get(i).getBranchId());
+			temp.setBranchRegion(allBranches.get(i).getBranchRegion());
+			temp.setBranchCity(allBranches.get(i).getBranchCity());
+			branches.add(temp);
+		}
+		return branches;
 	}
 	
 }

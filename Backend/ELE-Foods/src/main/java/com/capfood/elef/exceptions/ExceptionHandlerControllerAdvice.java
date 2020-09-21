@@ -1,14 +1,22 @@
 package com.capfood.elef.exceptions;
 
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 
 @ControllerAdvice
@@ -59,8 +67,47 @@ public class ExceptionHandlerControllerAdvice extends ResponseEntityExceptionHan
 	@ExceptionHandler(NotAnAdminException.class)
 	@ResponseStatus(value = HttpStatus.NOT_ACCEPTABLE)
 	public @ResponseBody ExceptionResponse NotAnAdminException(final NotAnAdminException exception,final HttpServletRequest request) {
-		ExceptionResponse error = new ExceptionResponse(exception.getLocalizedMessage());
+		ExceptionResponse error = new ExceptionResponse(exception.getMessage());
 		return error;
+	}
+	
+	@ExceptionHandler(ChildRecordsFoundException.class)
+	@ResponseStatus(value = HttpStatus.NOT_ACCEPTABLE)
+	public @ResponseBody ExceptionResponse ChildRecordsFoundException(final ChildRecordsFoundException exception,final HttpServletRequest request) {
+		ExceptionResponse error = new ExceptionResponse(exception.getMessage());
+		return error;
+	}
+	
+	@ExceptionHandler(ItemNameAlreadyExistsException.class)
+	@ResponseStatus(value = HttpStatus.NOT_ACCEPTABLE)
+	public @ResponseBody ExceptionResponse ItemNameAlreadyExistsException(final ItemNameAlreadyExistsException exception,final HttpServletRequest request) {
+		ExceptionResponse error = new ExceptionResponse(exception.getMessage());
+		return error;
+	}
+	
+	@ExceptionHandler(CategoryNameAlreadyExistsException.class)
+	@ResponseStatus(value = HttpStatus.NOT_ACCEPTABLE)
+	public @ResponseBody ExceptionResponse CategoryNameAlreadyExistsException(final CategoryNameAlreadyExistsException exception,final HttpServletRequest request) {
+		ExceptionResponse error = new ExceptionResponse(exception.getMessage());
+		return error;
+	}
+	
+	@ExceptionHandler(SubCategoryNameAlreadyExistsException.class)
+	@ResponseStatus(value = HttpStatus.NOT_ACCEPTABLE)
+	public @ResponseBody ExceptionResponse SubCategoryNameAlreadyExistsException(final SubCategoryNameAlreadyExistsException exception,final HttpServletRequest request) {
+		ExceptionResponse error = new ExceptionResponse(exception.getMessage());
+		return error;
+	}
+	@Override
+	protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,HttpHeaders headers,HttpStatus status,WebRequest request){
+
+		List<String> list=new ArrayList<String>();
+		for(ObjectError error1:ex.getBindingResult().getAllErrors()) {
+			list.add(error1.getDefaultMessage());
+		}
+		ValidExceptionHandler error = new ValidExceptionHandler("Validation Failed",list);
+		return new ResponseEntity<Object>(error,HttpStatus.BAD_REQUEST);
+	
 	}
 	
 	@ExceptionHandler(InvalidDetailsForPasswordChangeException.class)

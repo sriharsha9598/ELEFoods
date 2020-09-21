@@ -1,6 +1,8 @@
 package com.capfood.elef.dao;
 
 
+import java.util.List;
+
 import com.capfood.elef.entities.Address;
 import com.capfood.elef.entities.Branch;
 import com.capfood.elef.entities.CarryBox;
@@ -20,10 +22,12 @@ public interface CustomerDao {
 	public User getAnUserDetails(String emailId);
 	public Address getAnAddressDetails(int addressId);
 	public boolean addANewAddress(Address address);
+	public boolean updateAnAddress(Address address);
 	public boolean deleteAnAddress(int addressId);
 	public void placeAnOrder(Order order);
-	public String getAnOrderDetails(int orderId);
+	public List<Order> getAnOrderDetails(int orderId);
 	public Item getAnItemDetails(int itemId);
 	public void updateCarryBox(CarryBox carryBox);
+	public List<Branch> getAllBranches();
 	
 }

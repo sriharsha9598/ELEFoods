@@ -47,15 +47,15 @@ public interface AuthenticationService {
 	/**
 	 * This method is used for getting the order list of placed orders 
 	 * @param emailId This is the first parameter to getOrderList method 
-	 * @return List<Order> This returns a list of orders placed
+	 * @return List<List<Order>> This returns a list of order lists containing orders placed
 	 */
-	public List<Order> getOrderList(String emailId);
+	public List<List<Order>> getOrderList(String emailId);
 	
 	/**
 	 * This method is used for getting the order list of accepted orders 
 	 * @param emailId This is the first parameter to getActiveOrderList method 
-	 * @return List<Order> This returns a list of orders accepted
+	 * @return List<Order> This returns a list of order lists contatining orders accepted
 	 */
-	public List<Order> getActiveOrderList(String emailId);
+	public  List<List<Order>> getActiveOrderList(String emailId);
 
 }

@@ -33,12 +33,12 @@ public class User {
 	
 		
 	@NotEmpty(message="password cannot be empty")
-	@Length(max=10)
+	@Length(min=8)
 	@Column(name="PASSWORD")
 	private String password;
 	
 	@NotEmpty(message="security question cannot be empty")
-	@Length(max=30)
+	@Length(max=80)
 	private String security_question;
 	
 	@NotEmpty(message="security question cannot be empty")
@@ -46,7 +46,7 @@ public class User {
 	private String security_answer;
 	
     @NotEmpty(message="mobile number should not be empty")
-    @Length(max=30)
+    @Length(max=10,min=10)
 	@Column(name="MOBILENUMBER")
 	private String mobileNumber;
     

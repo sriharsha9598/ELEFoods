@@ -1,5 +1,8 @@
 package com.capfood.elef.repository;
 
+
+
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -12,4 +15,6 @@ public interface SubCategoryRepository extends JpaRepository<SubCategory, Intege
 	
 	@Query("SELECT max(subcategory.subCategoryId) from SubCategory subcategory")
 	public int getMaxOfSubCategoryId();
+	
+	
 }

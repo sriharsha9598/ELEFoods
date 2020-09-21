@@ -61,8 +61,11 @@ public class AuthenticationController {
 	 * In case of any exception the Controller shall take care of it using ExceptionHandlerControllerAdvice
 	 */
 	@PostMapping("/changePassword")
-	public String changePassword(@RequestBody ChangePassword changePassword) {
+	public String changePassword(@RequestBody ForgotPassword1 changePassword) {
 		logger.trace("Change Password method accessed at controller");
+		System.out.println(changePassword.emailId);
+		System.out.println(changePassword.newPassword);
+		System.out.println(changePassword.reEnterNewPassword);
 		return service.changePassword(changePassword.emailId, changePassword.newPassword, changePassword.reEnterNewPassword);
 	}
 	
@@ -71,27 +74,18 @@ public class AuthenticationController {
 	 * In case of any exception the Controller shall take care of it using ExceptionHandlerControllerAdvice
 	 */
 	@GetMapping("/getOrderList/{emailId}")
-	public List<Order> getOrderList(@PathVariable String emailId){
+	public List<List<Order>> getOrderList(@PathVariable String emailId){
 		logger.trace("Get order list method is accessed at Controller");
 		return service.getOrderList(emailId);
 	}
 	
-//	/* 
-//	 * When /updateOrderStatus/{orderId}/{orderStatus} is mapped with client request updateOrderStatus method is called at service layer
-//	 * In case of any exception the Controller shall take care of it using ExceptionHandlerControllerAdvice
-//	 */
-//	@GetMapping("/updateOrderStatus/{orderId}/{orderStatus}")
-//	public String updateOrderStatus(@PathVariable int orderId,@PathVariable String orderStatus) {
-//		logger.trace("Update order status method is accessed at Controller");
-//		return service.updateOrderStatus(orderId, orderStatus);
-//	}
 	
 	/* 
 	 * When /getActiveOrderList/{emailId} is mapped with client request getActiveOrderList method is called at service layer
 	 * In case of any exception the Controller shall take care of it using ExceptionHandlerControllerAdvice
 	 */
 	@GetMapping("/getActiveOrderList/{emailId}")
-	public List<Order> getActiveOrderList(@PathVariable String emailId){
+	public  List<List<Order>> getActiveOrderList(@PathVariable String emailId){
 		logger.trace("Get active order list method is accessed at Controller");
 		return service.getActiveOrderList(emailId);
 	}
@@ -110,9 +104,6 @@ public class AuthenticationController {
 		public String emailId;
 		public String security_question;
 		public String security_answer;
-	}
-	class ChangePassword{
-		public String emailId;
 		public String newPassword;
 		public String reEnterNewPassword;
 	}

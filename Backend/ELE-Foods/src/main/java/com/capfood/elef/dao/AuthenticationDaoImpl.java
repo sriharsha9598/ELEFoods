@@ -1,9 +1,12 @@
 package com.capfood.elef.dao;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import javax.persistence.NoResultException;
+import java.util.Set;
+
+import javax.persistence.EntityNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +21,7 @@ import com.capfood.elef.exceptions.InvalidLoginCredentialsException;
 import com.capfood.elef.exceptions.UserExistsException;
 import com.capfood.elef.repository.AddressRepository;
 import com.capfood.elef.repository.CarryBoxRepository;
+import com.capfood.elef.repository.OrderRepository;
 import com.capfood.elef.repository.UserRepository;
 
 @Repository
@@ -31,15 +35,19 @@ public class AuthenticationDaoImpl implements AuthenticationDao{
 	
 	@Autowired
 	private AddressRepository addressRepository;
+	
+	@Autowired
+	private OrderRepository orderRepository;
+	
 	static int addressId=3000;
 	static int carryBoxId=1000;
 	Logger logger=LoggerFactory.getLogger(AuthenticationDaoImpl.class);
 	@Override
 	public String userLogin(String emailId, String password) throws InvalidLoginCredentialsException {
 		logger.trace("Login method is accessed");
-		User user=userRepository.getOne(emailId);
+		
 		try {
-
+			User user=userRepository.getOne(emailId);
 			if(user==null) {
 				logger.error("InvalidLoginCredentialsException thrown by the method");
 				throw new InvalidLoginCredentialsException("User does not exist");
@@ -57,9 +65,9 @@ public class AuthenticationDaoImpl implements AuthenticationDao{
 			}
 
 
-		}catch(NoResultException ex) {
+		}catch(EntityNotFoundException e) {
 			logger.error("InvalidLoginCredentialsException thrown by the method");
-			throw new InvalidLoginCredentialsException("An error has occured!Please try again");
+			throw new InvalidLoginCredentialsException("Invalid username or password");
 		}
 	}
 
@@ -160,7 +168,7 @@ public class AuthenticationDaoImpl implements AuthenticationDao{
 	}
 
 	@Override
-	public List<Order> getOrderList(String emailId) {
+	public List<List<Order>> getOrderList(String emailId) {
 		logger.trace("Get Order List method accessed");
 		List<Order> order=new ArrayList<>();
 		User user=userRepository.getOne(emailId);
@@ -172,13 +180,30 @@ public class AuthenticationDaoImpl implements AuthenticationDao{
 				if(order1.getOrderStatus().equals("Placed"))
 					order.add(order1);
 			}
-			return order;
+			List<Integer> orderIds=new ArrayList<>();
+			Iterator<Order> iterator2=order.iterator();
+			while(iterator2.hasNext()) {
+				orderIds.add(iterator2.next().getOrderId());
+			}
+			Set<Integer> orderIds2=new HashSet<>(orderIds);
+			List<List<Order>> placedOrders=new ArrayList<>();
+			Iterator<Integer> iterator3=orderIds2.iterator();
+			
+			while(iterator3.hasNext()) {
+				placedOrders.add(getOrderByOrderId(iterator3.next()));
+			}
+			return placedOrders;
+			
 		}
 		return null;
 	}
+	
+	public List<Order> getOrderByOrderId(int orderId){
+			return orderRepository.getOrders(orderId);
+	}
 
 	@Override
-	public List<Order> getActiveOrderList(String emailId) {
+	public List<List<Order>> getActiveOrderList(String emailId) {
 		logger.trace("Get Active Order List method accessed");
 		List<Order> order=new ArrayList<>();
 		User user=userRepository.getOne(emailId);
@@ -190,8 +215,20 @@ public class AuthenticationDaoImpl implements AuthenticationDao{
 				if(order1.getOrderStatus().equals("Accepted"))
 					order.add(order1);
 			}
-
-			return order;
+			List<Integer> orderIds=new ArrayList<>();
+			Iterator<Order> iterator2=order.iterator();
+			while(iterator2.hasNext()) {
+				orderIds.add(iterator2.next().getOrderId());
+			}
+			Set<Integer> orderIds2=new HashSet<>(orderIds);
+			List<List<Order>> activeOrders=new ArrayList<>();
+			Iterator<Integer> iterator3=orderIds2.iterator();
+			
+			while(iterator3.hasNext()) {
+				activeOrders.add(getOrderByOrderId(iterator3.next()));
+			}
+			return activeOrders;
+			
 		}
 		return null;
 	}

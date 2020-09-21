@@ -1,5 +1,7 @@
 package com.capfood.elef.dao;
 
+import java.util.List;
+
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -118,7 +120,7 @@ public class CustomerDaoImpl implements CustomerDao {
 	@Override
 	public boolean deleteAnAddress(int addressId) {
 		try {
-		addressRepository.delete(addressRepository.getOne(addressId));
+		addressRepository.deleteById(addressId);
 		return true;
 		}
 		catch(Exception ex) {
@@ -132,8 +134,8 @@ public class CustomerDaoImpl implements CustomerDao {
 	}
 	
 	@Override
-	public String getAnOrderDetails(int orderId) {
-		return orderRepository.trackAnOrder(orderId).get(0);
+	public List<Order> getAnOrderDetails(int orderId) {
+		return orderRepository.getOrders(orderId);
 	}
 	
 	@Override
@@ -144,5 +146,16 @@ public class CustomerDaoImpl implements CustomerDao {
 	@Override
 	public void updateCarryBox(CarryBox carryBox) {
 		carryBoxRepository.save(carryBox);
+	}
+
+	@Override
+	public boolean updateAnAddress(Address address) {
+		addressRepository.save(address);
+		return false;
+	}
+
+	@Override
+	public List<Branch> getAllBranches() {
+		return branchRepository.findAll();
 	}
 }
