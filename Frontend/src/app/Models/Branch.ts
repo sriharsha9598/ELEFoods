@@ -11,6 +11,5 @@ export class Branch{
     items:Item[];
     category:Category[];
     contactNumber: number;
-    
 
 }

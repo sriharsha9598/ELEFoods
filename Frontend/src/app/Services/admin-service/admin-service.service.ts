@@ -12,8 +12,8 @@ export class AdminServiceService {
   baseUrl: string = "http://localhost:8094/admin";
   constructor(private http:HttpClient) { }
 
-  getSubCategories(){
-    return this.http.get<SubCategory[]> (this.baseUrl+"/getSubCategories");
+  getSubCategories(username:string){
+    return this.http.get<SubCategory[]> (this.baseUrl+"/getSubCategories/"+username);
   }
   getCategories(username:string){
     return this.http.get<Category[]> (this.baseUrl+"/getCategories/"+username);

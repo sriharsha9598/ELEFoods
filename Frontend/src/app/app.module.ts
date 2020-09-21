@@ -16,8 +16,6 @@ import { PlaceOrderComponent } from './Components/customer/place-order/place-ord
 import { TrackOrderComponent } from './Components/customer/track-order/track-order.component';
 import { FilterItemsPipe } from './Pipes/CustomerPipes/filter-items/filter-items.pipe';
 import { FilterCarryBoxItemsPipe } from './Pipes/CustomerPipes/filter-carryBoxItems/filter-carry-box-items.pipe';
-import { FindQuantityPipe } from './Pipes/CustomerPipes/find-quantity/find-quantity.pipe';
-import { FilterOrdersPipe } from './Pipes/CustomerPipes/filter-orders/filter-orders.pipe';
 import { AdminHomeComponent } from './Components/admin-home/admin-home.component';
 import { DashboardComponent } from './Components/admin-home/dashboard/dashboard.component';
 import { OrdersComponent } from './Components/admin-home/orders/orders.component';
@@ -36,23 +34,28 @@ import { SignUpComponent } from './Components/authenticate/sign-up/sign-up.compo
 import { ResetNowComponent } from './Components/authenticate/reset-password/reset-now.component';
 import { ResetPasswordComponent } from './Components/authenticate/reset-password/reset-password.component';
 import { SearchItemsPipe } from './Pipes/AdminPipes/search-items.pipe';
+import { LoggingService } from './Models/LoggingService';
+import { FilterParameterPipe } from './Pipes/CustomerPipes/filter-parameter/filter-parameter.pipe';
+import { MyAccountComponent } from './Components/customer/my-account/my-account.component';
+import { SortItemsPipe } from './Pipes/CustomerPipes/sort-items/sort-items.pipe';
 
 @NgModule({
   declarations: [
     AppComponent,
+    
     //customer components and pipes
     CustomerComponent,
     AuthenticateComponent,
     ItemsComponent,
     FilterItemsPipe,
     FilterCarryBoxItemsPipe,
-    FindQuantityPipe,
     CarryBoxComponent,
     MyOrdersComponent,
     HomeComponent,
-    FilterOrdersPipe,
     PlaceOrderComponent,
     TrackOrderComponent,
+    FilterParameterPipe,
+
 
     //Admin components and pipes
     AdminHomeComponent,
@@ -75,7 +78,9 @@ import { SearchItemsPipe } from './Pipes/AdminPipes/search-items.pipe';
     SignUpComponent,
     ResetNowComponent,
     ResetPasswordComponent,
-    SearchItemsPipe
+    SearchItemsPipe,
+    MyAccountComponent,
+    SortItemsPipe
   ],
   imports: [
     BrowserModule,
@@ -84,7 +89,7 @@ import { SearchItemsPipe } from './Pipes/AdminPipes/search-items.pipe';
     FormsModule,
     ReactiveFormsModule
   ],
-  providers: [],
+  providers: [LoggingService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -22,6 +22,7 @@ import { LoginComponent } from './Components/authenticate/login/login.component'
 import { SignUpComponent } from './Components/authenticate/sign-up/sign-up.component';
 import { ResetNowComponent } from './Components/authenticate/reset-password/reset-now.component';
 import { ResetPasswordComponent } from './Components/authenticate/reset-password/reset-password.component';
+import { MyAccountComponent } from './Components/customer/my-account/my-account.component';
 
 
 const routes: Routes = [
@@ -31,9 +32,9 @@ const routes: Routes = [
     { path: "items/:type/:filter", component: ItemsComponent },
     { path: "myCarryBox", component: CarryBoxComponent },
     { path: "myOrders", component: MyOrdersComponent },
+    { path: "myAccount", component: MyAccountComponent },
     { path: "placeOrder", component: PlaceOrderComponent },
     { path: "trackOrder/:orderId", component: TrackOrderComponent },
-
     ]
   },
   {

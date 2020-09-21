@@ -4,6 +4,14 @@ import { SubCategory } from '../../../Models/subCategory';
 @Pipe({
   name: 'filterItems'
 })
+
+
+/* Method:FilterItemsPipe
+	 * Description: Called from items page to filter a particular category of items
+	 * @param Category[]:categories
+	 * @param string: filter
+	 * @return Item[]: filtered items are returned
+*/
 export class FilterItemsPipe implements PipeTransform {
 
   filteredItems: any = {}
