@@ -11,11 +11,12 @@
     align-items: stretch;
    
 }
-/* sidebar */
+/* Start of sidebar */
 .sidebar{
     width:240px;
     position: fixed;
-    background-color:  #1b262c;
+   /* background-color:  rgba(41,21,14,0.9);*/
+   background-color:  #1b262c;
     height: 100vh;
     padding:0.2em;
     padding-right: 0;
@@ -104,7 +105,13 @@ h6{
 a:hover{
     opacity: 0.5;
 }
-/* content */
+
+/*End of styling sidebar*/
+
+
+
+
+/* styling content for router-outlet */
 .content{
   position: relative;
     left:240px;
@@ -113,6 +120,8 @@ a:hover{
 
 
 
+
+/*Styling For responsiveness*/
 @media only screen and (max-width: 768px){
     .sidebar{
        

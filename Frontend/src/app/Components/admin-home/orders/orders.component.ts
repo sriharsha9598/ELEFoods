@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Order } from '../../../Models/Order';
 import { AdminServiceService } from '../../../Services/admin-service/admin-service.service';
+import { Router } from '@angular/router';
+import { LoggingService } from '../../../Models/LoggingService';
 
 
 
@@ -16,17 +18,20 @@ export class OrdersComponent implements OnInit {
   count1:number;
   emailId:string;
   updating:boolean=false
-  constructor(private adminService:AdminServiceService) { }
+  constructor(private adminService:AdminServiceService, private router:Router,private logger:LoggingService) { }
 
   ngOnInit() {
-    this.emailId="pravallikakonduru17@gmail.com";
+    //if local storage is null, navigate to home page 
+    if (localStorage.email == null) {
+      this.router.navigate(['/customer'])
+    }
     this.getOrderList(this.emailId);
     this.getActiveOrderList(this.emailId);
 
 
   }
     getOrderList(emailId: string){
-      this.adminService.getOrderList(this.emailId).subscribe(data=>{
+      this.adminService.getOrderList(localStorage.email).subscribe(data=>{
         this.placedOrder=data;
         this.count=this.placedOrder.length;
       },err=>{
@@ -35,7 +40,7 @@ export class OrdersComponent implements OnInit {
     }
     getActiveOrderList(emailId:string){
 
-      this.adminService.getActiveOrderList(this.emailId).subscribe(data=>{
+      this.adminService.getActiveOrderList(localStorage.email).subscribe(data=>{
         this.activeOrder=data;
         this.count1=this.activeOrder.length;
       },err=>{
@@ -44,46 +49,27 @@ export class OrdersComponent implements OnInit {
     }
 
 
-  updateAcceptStatus(orderId:number){
-    this.adminService.updateOrderStatus(orderId, "Accepted").subscribe(data=>
+
+  //function to update status of the order
+  updateStatus(orderId:number, status:string){
+
+    //calling service to update order status
+    this.adminService.updateOrderStatus(orderId, status).subscribe(data=>
       {
         this.updating=true
+        this.logger.logStatus("updated the order status ");
+        //timeout for loader
         setTimeout(() => {
           this.updating=false
         }, 2500);
+
         console.log("data")
-        this.getActiveOrderList(this.emailId);
-        this.getOrderList(this.emailId);
+        this.getActiveOrderList(localStorage.email);
+        this.getOrderList(localStorage.email);
 
       })
   }
-  updateRejectStatus(orderId:number){
-    this.adminService.updateOrderStatus(orderId, "Rejected").subscribe(data=>
-      {
-        this.updating=true
-        setTimeout(() => {
-          this.updating=false
-        }, 2500);
-        console.log("data")
-        this.getActiveOrderList(this.emailId);
-        this.getOrderList(this.emailId);
+ 
 
-      })
-  }
-  updateDeliveredStatus(orderId:number){
-    this.adminService.updateOrderStatus(orderId, "Delivered").subscribe(data=>
-      {
-        this.updating=true
-        setTimeout(() => {
-          this.updating=false
-        }, 2500);
-        console.log("data")
-        if(data){
-        this.getActiveOrderList(this.emailId);
-        this.getOrderList(this.emailId);
-        }
-
-      })
-  }
 
 }

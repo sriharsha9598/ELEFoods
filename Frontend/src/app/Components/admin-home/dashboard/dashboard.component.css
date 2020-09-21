@@ -1,3 +1,4 @@
+/*wrapper for whole component*/
 .wrapper{
     width:84.3vw;
     overflow: hidden;
@@ -6,25 +7,34 @@
   
    
 }
+
+/*styling for  whole content*/
 .content{
     padding-top: 16rem;
     background-color: crimson;
     padding-bottom:21rem;
 
 }
+
 .upper-svg{
     background-color: crimson;
 }
+
+/*styling of left include matter and heading*/
 .left{
     float:left;
     text-align: center;
     padding-left:4rem;
     margin-top:3rem;
 }
+
+/*styling of right include image*/
 .right{
  margin-right: 10rem;;
     float: right;
 }
+
+/*Styling of title*/
 .heading{
     color: #ff971d;
     font-family: Julius Sans One;
@@ -56,4 +66,58 @@ img:hover{
     width:39rem;
     box-shadow: 2px 2px 0px 2px slateblue;
 }
+/*Styling of content ends*/ 
 
+
+/*making it resonsive*/
+@media only screen and (max-width: 600px) {
+  .right{
+    margin-right: 0;;
+    float: none;
+    
+  }
+  .left{
+    float:none;
+    text-align: center;
+    padding-left:0;
+    margin-top:0;
+      
+      
+     
+  }
+  .content{
+    padding-top: 0;
+    background-color: crimson;
+    padding-bottom:0;
+    display:flex;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.heading{
+    width:200px;
+    margin-left: 0;
+  text-align: center;
+}
+p{
+    width: 200px;
+    margin-left: 0;
+    text-align: center;
+}
+
+img{
+  width:215px;
+  height:190px;
+    margin-top: 0;
+    padding-right: 5rem;
+    padding-bottom: 1rem;
+    border-radius: 50%;
+    border-top:7px solid yellow;
+    border-right:white;
+
+}
+img:hover{
+    
+    box-shadow: 2px 2px 0px 2px slateblue;
+}
+  }

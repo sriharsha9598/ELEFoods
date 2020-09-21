@@ -15,8 +15,11 @@
     width:50%;
 }
 
+
+/*Styling of loader starts*/
 .main_div{
-    width:100%;
+    width:100vh;
+    height: 100vh;
    display: flex;
    justify-content: center;
     align-items: center;
@@ -50,3 +53,5 @@
         transform: rotate(360deg);
     }
 }
+
+/*Styling of loader ends*/

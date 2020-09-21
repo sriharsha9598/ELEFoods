@@ -1,12 +1,17 @@
 
  
 <div class="wrapper"  >
+
+
+    <!--Start of loader-->
     <div class="main_div" *ngIf="updating">
         <div class="center_div">
             <span class="loader"></span>
         </div>
        <label style="position: absolute;"> updating..</label>
     </div>
+    <!--End of loader-->
+
 <div *ngIf="!updating">
 <div class="left">
     <div class="col-sm-12">
@@ -58,16 +63,19 @@
                                     <td style="text-align: center">
                                         <font size="3" color="black"><b>Rs.{{order1.item.itemPrice}}</b></font>
                                     </td>
-
-
-
+                                
+                                </tr>
+                                <tr>
+                                    <td style="text-align: center" colspan="3">
+                                        <font size="3"  color="black"><b>{{order[0].address.line1}},{{order[0].address.line2}},<br>{{order[0].address.landmark}}</b></font>
+                                    </td>
                                 </tr>
                             </tbody>
                         </table>
                         <div class="offset-sm-9 col-sm-3">
-                            <div style="display: inline-flex;margin-left:-10px">
-                            <button class="btn btn-success" (click)="updateAcceptStatus(order[0].orderId)">Accept</button>&nbsp;&nbsp;
-                            <button class="btn btn-danger" (click)="updateRejectStatus(order[0].orderId)" >Reject</button>
+                            <div style="display: inline-flex;margin-left:-4rem">
+                            <button class="btn btn-success" (click)="updateStatus(order[0].orderId,'Accepted')">Accept</button>&nbsp;&nbsp;
+                            <button class="btn btn-danger" (click)="updateStatus(order[0].orderId,'Rejected')" >Reject</button>
                         </div>
                         </div>
 
@@ -135,7 +143,7 @@
                                 </tbody>
                             </table>
                             <div class="offset-sm-9 col-sm-3">
-                                <button class="btn btn-success" style="margin-left: -10px;" (click)="updateDeliveredStatus(order[0].orderId)">Mark as Delivered</button>&nbsp;&nbsp;
+                                <button class="btn btn-success" style="margin-left: -4rem;" (click)="updateStatus(order[0].orderId,'Delivered')">Mark as Delivered</button>&nbsp;&nbsp;
                             </div>
 
                         </div>
